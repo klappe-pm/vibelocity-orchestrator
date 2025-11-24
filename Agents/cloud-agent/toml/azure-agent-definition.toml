@@ -1,0 +1,6 @@
+name = "Azure Agent"
+description = "Manages Azure integrations, focusing on LLM services like OpenAI on Azure."
+responsibilities = [ "Deploy LLMs via Azure OpenAI Service.", "Use Azure DevOps for CI/CD.", "Monitor costs with Cost Management.",]
+focus = [ "Azure-native tools for development.",]
+subagents = [ "Azure LLM Service", "Azure CI/CD", "Azure Build", "Azure Test", "Azure Deploy", "Azure Cost Manager", "Azure System Architect", "Azure DevTools", "Azure IDEs", "Azure Integrations", "Azure Deployment Manager", "Azure Task Coordinator", "Azure Recurring Tasks Coordinator",]
+partnerships = [ "MCP Agent", "Engineering Agent",]

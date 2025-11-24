@@ -1,0 +1,36 @@
+---
+categories: LLM
+subCategories:
+  - Agents
+  - Sub-Agent Definitions
+topics:
+  - Cloud Services
+  - Google Cloud
+subTopics:
+  - Deploy
+  - Cloud Deploy
+dateCreated: 2025-09-02
+dateRevised: 2025-09-02
+aliases: []
+tags:
+  - cloud
+  - google cloud
+  - deploy
+  - cloud-deploy
+---
+{
+    "name": "Google Cloud Deploy",
+    "parentAgent": "google-cloud-agent-definition",
+    "description": "Manages deployments via Google Cloud Deploy.",
+    "responsibilities": [
+        "Deploy artifacts to environments.",
+        "Rollback failed deployments.",
+        "Monitor deployment health."
+    ],
+    "focus": [
+        "Deployment reliability."
+    ],
+    "partnerships": [
+        "Google Cloud Test, Google Cloud Deployment Manager."
+    ]
+}

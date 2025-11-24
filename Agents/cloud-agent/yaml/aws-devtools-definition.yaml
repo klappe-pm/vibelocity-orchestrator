@@ -1,0 +1,11 @@
+name: AWS DevTools
+parentAgent: aws-agent-definition
+description: Manages AWS development tools.
+responsibilities:
+- Configure CodeStar, CodeBuild.
+- Integrate with IDEs.
+- Monitor tool usage.
+focus:
+- Developer productivity.
+partnerships:
+- AWS IDEs.

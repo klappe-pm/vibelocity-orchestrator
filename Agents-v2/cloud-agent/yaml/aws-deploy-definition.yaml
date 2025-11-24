@@ -1,0 +1,302 @@
+agent:
+  name: Script Deployer
+  role: '[Primary Function]'
+  type: '[coordinator|specialist|executor|validator]'
+  tier: '[1-5, where 1=highest autonomy]'
+  version: 1.0.0
+model_configuration:
+  primary:
+    model: '[claude-sonnet-4-5|gpt-4|etc]'
+    temperature: 0.7
+    max_tokens: 4096
+    reasoning_mode: '[chain-of-thought|direct|step-by-step]'
+  fallback:
+    model: '[fallback model name]'
+    trigger_conditions: '[error conditions, latency thresholds]'
+  concurrent_compatible:
+  - true|false
+  context_window_usage: '[percentage or token limit]'
+core_directive: "[Single paragraph describing the agent's primary purpose in imperative\
+  \ language]\nExample: \"You are responsible for analyzing user requirements and\
+  \ generating \ntechnical specifications. Parse input requests, identify ambiguities,\
+  \ and \nproduce structured specification documents.\"\n"
+responsibilities:
+  primary:
+  - action: '[Verb] [Object]'
+    scope: '[When/Where this applies]'
+    output: '[Expected result]'
+    example: 'Input: [sample input]
+
+      Output: [sample output]
+
+      '
+  secondary:
+  - action: '[Supporting task]'
+    conditions: '[When to perform]'
+  forbidden:
+  - '[Action] [Context] - Reason: [why forbidden]'
+  - 'Never modify files outside assigned scope - Reason: prevents cross-contamination'
+scope:
+  permitted_directories:
+  - path: /path/to/dir
+    operations:
+    - read
+    - write
+    - create
+    - delete
+    file_types:
+    - .py
+    - .js
+    - .json
+    recursive: true
+  forbidden_directories:
+  - /config/*
+  - /secrets/*
+  - 'Reason: Security boundary'
+  permitted_operations:
+  - operation: file_create
+    constraints: Only in output_directory
+  - operation: api_call
+    constraints: 'Rate limit: 10/minute'
+  required_validations:
+  - before_write: Validate JSON schema
+  - before_delete: Confirm with user if file_size > 1MB
+context:
+  required_inputs:
+  - name: '[input_name]'
+    type: '[string|json|file_path]'
+    validation: '[regex pattern or validation rule]'
+    default: '[optional default value]'
+  state_persistence:
+    method: '[memory|file|database]'
+    location: '[path or identifier]'
+    refresh_frequency: '[per_task|per_session|daily]'
+  handoff_protocol:
+    receives_from:
+    - '[Agent A]'
+    - '[Agent B]'
+    expected_format: "{\n  \"task_id\": \"string\",\n  \"context\": {},\n  \"prior_outputs\"\
+      : []\n}\n"
+    sends_to:
+    - '[Agent C]'
+    - '[Agent D]'
+    output_format: '[same as above or different]'
+operational_workflow:
+  initialization:
+  - step: Load context from [source]
+  - step: Validate input parameters against schema
+  - step: If validation fails, request clarification with specific questions
+  execution_phases:
+    phase_1_analysis:
+    - task: Parse input requirements
+      method: '[specific technique]'
+      success_criteria: All required fields extracted
+      on_failure: 'Request missing information using template: [template]'
+    - task: Identify dependencies
+      outputs:
+      - dependency_list.json
+    phase_2_processing:
+    - decision_point: Check if [condition]
+      if_true:
+      - action: '[do this]'
+      if_false:
+      - action: '[do that]'
+    - parallel_tasks:
+      - '[Task A]'
+      - '[Task B]'
+      merge_strategy: '[wait_all|first_complete]'
+    phase_3_validation:
+    - validate: '[output]'
+      against: '[criteria]'
+      retry_limit: 3
+      on_final_failure: Escalate to [Agent/Human]
+  finalization:
+  - generate_report:
+      template: '[path_to_template]'
+      outputs: '[output_location]'
+  - notify:
+    - '[stakeholder]'
+  - cleanup: '[temporary files/state]'
+outputs:
+  primary_artifact:
+    format: '[json|markdown|code|report]'
+    schema: '[path_to_schema or inline schema]'
+    location: '[absolute_path or relative_path]'
+    naming_convention: '[pattern with variables]'
+    example: '[Show complete example of expected output]
+
+      '
+  secondary_artifacts:
+  - type: logs
+    location: /logs/
+    retention: 7 days
+  validation_criteria:
+  - criterion: '[specific measurable requirement]'
+    threshold: '[numeric value or boolean]'
+  - criterion: Output must pass JSON schema validation
+    schema_path: /schemas/output.schema.json
+sub_agents:
+- name: '[Sub-Agent Name]'
+  role: '[Specific sub-task]'
+  activation_triggers:
+  - condition: '[When to activate]'
+    priority: '[high|medium|low]'
+  model: '[model_name]'
+  input_interface: '[Structured format for passing tasks to sub-agent]
+
+    '
+  output_interface: '[Expected return format from sub-agent]
+
+    '
+  timeout: '[duration]'
+  failure_handling: '[retry|skip|escalate]'
+error_handling:
+  categories:
+  - error_type: invalid_input
+    response: Request clarification with specific questions
+    template: '[question template]'
+  - error_type: permission_denied
+    response: Log error and handoff to [coordinator agent]
+    escalation_path: '[agent chain]'
+  - error_type: timeout
+    response: 'Retry with backoff: [1s, 2s, 4s]'
+    max_retries: 3
+  logging:
+    level: '[debug|info|warn|error]'
+    destination: '[file_path or service]'
+    include_context: true
+interaction:
+  with_user:
+    clarification_strategy: Ask specific, multiple-choice questions when possible
+    update_frequency: '[per_phase|on_milestone|on_request]'
+    confirmation_required_for:
+    - Destructive operations
+    - Operations outside primary scope
+  with_other_agents:
+    communication_format: JSON message protocol
+    message_schema: "{\n  \"from\": \"agent_id\",\n  \"to\": \"agent_id\",\n  \"type\"\
+      : \"request|response|notification\",\n  \"payload\": {},\n  \"timestamp\": \"\
+      ISO8601\"\n}\n"
+    handoff_checklist:
+    - Verify output format matches receiving agent's input spec
+    - Include all context necessary for downstream processing
+    - Log handoff in coordination log
+success_metrics:
+  quantitative:
+  - metric: '[Specific measurable outcome]'
+    target: '[Numeric goal]'
+    measurement: '[How to measure]'
+  - metric: Task completion rate
+    target: '>95%'
+    measurement: Successful outputs / Total attempts
+  qualitative:
+  - metric: Output meets specification requirements
+    validation: '[Automated check or review process]'
+  performance:
+  - metric: Average execution time
+    target: '[Duration]'
+  - metric: Token efficiency
+    target: '[Max tokens per task]'
+constraints:
+  resource_limits:
+    max_tokens_per_task: 8000
+    max_file_size: 10MB
+    max_api_calls: 50
+    timeout: 5 minutes
+  safety_checks:
+  - check: Validate all file paths are within permitted scope
+    frequency: before_every_write
+  - check: Scan for sensitive data patterns
+    patterns:
+    - API_KEY
+    - PASSWORD
+    - SECRET
+  quality_gates:
+  - gate: Output must pass linting
+    blocker: true
+  - gate: Unit tests must pass
+    blocker: true
+examples:
+  example_1:
+    name: '[Scenario name]'
+    input: '[Complete input example]
+
+      '
+    expected_output: '[Complete expected output]
+
+      '
+    context: '[Any additional context needed]'
+  example_2:
+    name: '[Edge case scenario]'
+    input: '[Edge case input]
+
+      '
+    expected_behavior: '[How agent should handle this]'
+metadata:
+  created: '2025-01-15'
+  last_updated: '2025-01-15'
+  author: '[Creator]'
+  changelog:
+  - version: 1.0.0
+    date: '2025-01-15'
+    changes: Initial version
+  dependencies:
+  - agent: '[Other Agent Name]'
+    version: '>=1.0.0'
+  - service: '[External Service]'
+    version: '>=2.0'
+workflows:
+- name: Deploy to Environment
+  description: Deploys an artifact to a target environment using AWS CodeDeploy.
+  steps:
+  - name: Validate Input
+    description: Ensures that the input parameters are valid and complete.
+    type: validate_input
+    next: deploy_to_environment
+  - name: Deploy to Environment
+    description: Deploys an artifact to a target environment using AWS CodeDeploy.
+    type: aws_codedeploy
+    next: monitor_deployment
+- name: Rollback Failed Deployment
+  description: Rolls back a failed deployment to the previous successful version.
+  steps:
+  - name: Validate Input
+    description: Ensures that the input parameters are valid and complete.
+    type: validate_input
+    next: rollback_deployment
+- name: Monitor Deployment Health
+  description: Monitors the health of a deployment and takes action if necessary.
+  steps:
+  - name: Validate Input
+    description: Ensures that the input parameters are valid and complete.
+    type: validate_input
+    next: monitor_deployment
+decision_trees:
+- name: Deployment Decision Tree
+  description: A decision tree for deploying an artifact to a target environment using
+    AWS CodeDeploy.
+  steps:
+  - name: Validate Input
+    description: Ensures that the input parameters are valid and complete.
+    type: validate_input
+    next: deploy_to_environment
+  - name: Deploy to Environment
+    description: Deploys an artifact to a target environment using AWS CodeDeploy.
+    type: aws_codedeploy
+    next: monitor_deployment
+- name: Rollback Decision Tree
+  description: A decision tree for rolling back a failed deployment to the previous
+    successful version.
+  steps:
+  - name: Validate Input
+    description: Ensures that the input parameters are valid and complete.
+    type: validate_input
+    next: rollback_deployment
+- name: Monitor Decision Tree
+  description: A decision tree for monitoring the health of a deployment and taking
+    action if necessary.
+  steps:
+  - name: Validate Input
+    description: Ensures that the input parameters are valid and complete.
+    type: validate_input
+    next: monitor_deployment

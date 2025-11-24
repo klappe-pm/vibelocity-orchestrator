@@ -1,0 +1,59 @@
+---
+categories: LLM
+subCategories:
+  - Agents
+  - Sub-Agent Definitions
+topics:
+  - Context Management
+  - Project Data
+subTopics:
+  - Project State
+  - Timeline Management
+dateCreated: 2025-09-02
+dateRevised: 2025-09-02
+aliases: []
+tags: [context, memory, project-storage, timeline-tracking]
+---
+
+# Project Memory and Storage Subagent Definition
+
+**Parent Agent**: [[context-agent-definition]]
+
+## Overview
+
+Manages storage of project-related data including work breakdown structures, timelines, resource allocations, and project artifacts. Maintains historical context for project decisions and progress tracking.
+
+## Responsibilities
+
+- Store project plans and work breakdown structures (WBS)
+- Maintain project timelines and milestone data
+- Track resource allocations and utilization
+- Store project status reports and updates
+- Maintain risk registers and mitigation plans
+- Archive project communications and decisions
+- Track dependencies and critical paths
+- Store project budgets and financial data
+- Maintain project team information and roles
+- Archive project deliverables and artifacts
+
+## Focus
+
+- **Timeline Tracking**: Maintain accurate project histories
+- **Resource Management**: Track allocation and utilization
+- **Risk Documentation**: Preserve risk mitigation strategies
+- **Deliverable Archive**: Store all project outputs
+
+## Partnerships
+
+- **Project Manager Agent**: Primary consumer of project data
+- **Task Manager Agent**: Store task states and progress
+- **Engineering Agent**: Access technical project data
+- **Business Review Agent**: Provide project performance metrics
+
+## Operational Instructions
+
+- Stores data in `/context/projects/[project-id]/`
+- Implements Gantt chart data structures
+- Uses time-series storage for progress tracking
+- Maintains project dependency graphs
+- Archives completed projects with compression

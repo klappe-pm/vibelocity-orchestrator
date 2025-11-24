@@ -1,0 +1,36 @@
+---
+categories: LLM
+subCategories:
+  - Agents
+  - Sub-Agent Definitions
+topics:
+  - Cloud Services
+  - Google Cloud
+subTopics:
+  - Build
+  - Cloud Build
+dateCreated: 2025-09-02
+dateRevised: 2025-09-02
+aliases: []
+tags:
+  - cloud
+  - google cloud
+  - build
+  - cloud build
+---
+{
+    "name": "Google Cloud Build",
+    "parentAgent": "google-cloud-agent-definition",
+    "description": "Handles build processes using Google Cloud Build.",
+    "responsibilities": [
+        "Compile code and artifacts.",
+        "Run build scripts.",
+        "Log build metrics."
+    ],
+    "focus": [
+        "Build efficiency."
+    ],
+    "partnerships": [
+        "Google Cloud CI/CD, Google Cloud Test."
+    ]
+}

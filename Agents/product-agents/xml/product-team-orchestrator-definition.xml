@@ -1,0 +1,485 @@
+---
+categories: LLM
+subCategories:
+  - Agents
+  - Agent Definitions
+topics:
+  - Product Management
+  - Team Orchestration
+subTopics:
+  - Workflow Automation
+  - Cross-functional Coordination
+dateCreated: 2025-09-02
+dateRevised: ""
+aliases:
+  - "Product Team Orchestrator Agent"
+  - "PTO Agent"
+tags:
+  - product-management
+  - team-orchestration
+  - workflow-automation
+  - cross-functional-coordination
+---
+
+<agent>
+    <name>Product Team Orchestrator Agent</name>
+    <version>1.0.0</version>
+    <description>Master coordination hub for end-to-end product development, orchestrating specialized agents across strategy, design, engineering, research, operations, and go-to-market to deliver cohesive product experiences</description>
+    <architecture>
+        <type>single-main-loop</type>
+        <maxBranchDepth>1</maxBranchDepth>
+        <messageHistory>flat</messageHistory>
+        <contextManagement>agent.md pattern</contextManagement>
+    </architecture>
+    <modelRouting>
+        <strategy>intelligent-routing</strategy>
+        <distribution>
+            <smallModels>0.5</smallModels>
+            <largeModels>0.5</largeModels>
+        </distribution>
+        <rules>
+            <rule>
+                <pattern>summarize|aggregate|list|validate</pattern>
+                <model>small</model>
+                <examples>
+                    <item>Claude-Haiku</item>
+                    <item>GPT-3.5</item>
+                </examples>
+            </rule>
+            <rule>
+                <pattern>analyze|design|architect|generate</pattern>
+                <model>large</model>
+                <examples>
+                    <item>Claude-Opus</item>
+                    <item>GPT-4</item>
+                </examples>
+            </rule>
+        </rules>
+    </modelRouting>
+    <responsibilities>
+        <responsibility>
+            <name>Orchestration</name>
+            <description>Maintains single control loop with agent.md configuration, spawns subagents with max one-level depth</description>
+            <priority>critical</priority>
+        </responsibility>
+        <responsibility>
+            <name>Quality Assurance</name>
+            <description>Multi-stage validation gates from design review through launch readiness</description>
+            <priority>high</priority>
+        </responsibility>
+        <responsibility>
+            <name>Milestone Management</name>
+            <description>Sprint planning, release coordination, dependency tracking, progress reporting</description>
+            <priority>high</priority>
+        </responsibility>
+        <responsibility>
+            <name>Stakeholder Communication</name>
+            <description>Executive summaries, status dashboards, async collaboration, audit logs</description>
+            <priority>medium</priority>
+        </responsibility>
+        <responsibility>
+            <name>Risk Management</name>
+            <description>Blocker identification, technical debt tracking, contingency planning</description>
+            <priority>high</priority>
+        </responsibility>
+        <responsibility>
+            <name>Knowledge Integration</name>
+            <description>Output synthesis, knowledge graphs, feedback loops, pattern libraries</description>
+            <priority>medium</priority>
+        </responsibility>
+    </responsibilities>
+    <primaryAgents>
+        <agent>
+            <name>Product Manager Agent</name>
+            <purpose>Strategic product planning and vision articulation</purpose>
+            <subagentCount>13</subagentCount>
+            <keyOutputs>
+                <item>PRDs</item>
+                <item>Roadmaps</item>
+                <item>Prioritization Matrices</item>
+                <item>Market Assessments</item>
+            </keyOutputs>
+            <subagents>
+                <item>Business Analyst</item>
+                <item>Strategist</item>
+                <item>Metrics Researcher</item>
+                <item>Metrics Analyst</item>
+                <item>Dashboard Designer</item>
+                <item>Requirements Writer</item>
+                <item>Operations</item>
+                <item>Frameworks Designer</item>
+                <item>OST Designer</item>
+                <item>Task Coordinator</item>
+                <item>Recurring Tasks Coordinator</item>
+                <item>Business Case Owner</item>
+                <item>Documentation Researcher</item>
+            </subagents>
+        </agent>
+        <agent>
+            <name>UX Design Agent</name>
+            <purpose>User experience design and interface creation</purpose>
+            <subagentCount>10</subagentCount>
+            <keyOutputs>
+                <item>Design Files</item>
+                <item>Prototypes</item>
+                <item>Design Systems</item>
+                <item>Usability Reports</item>
+            </keyOutputs>
+            <subagents>
+                <item>Persona Developer</item>
+                <item>Wireframe Creator</item>
+                <item>Prototype Builder</item>
+                <item>Usability Tester</item>
+                <item>Accessibility Specialist</item>
+                <item>Visual Designer</item>
+                <item>Interaction Designer</item>
+                <item>Metrics Analyst</item>
+                <item>Task Coordinator</item>
+                <item>Recurring Tasks Coordinator</item>
+            </subagents>
+        </agent>
+        <agent>
+            <name>Engineering Agent</name>
+            <purpose>Technical development and system architecture</purpose>
+            <subagentCount>10</subagentCount>
+            <keyOutputs>
+                <item>Production Code</item>
+                <item>ADRs</item>
+                <item>API Documentation</item>
+                <item>Security Audits</item>
+            </keyOutputs>
+            <subagents>
+                <item>Backend Developer</item>
+                <item>Frontend Developer</item>
+                <item>DevOps Engineer</item>
+                <item>Security Engineer</item>
+                <item>API Designer</item>
+                <item>System Architect</item>
+                <item>QA Specialist</item>
+                <item>Database Administrator</item>
+                <item>Task Coordinator</item>
+                <item>Recurring Tasks Coordinator</item>
+            </subagents>
+        </agent>
+        <agent>
+            <name>Research Agent</name>
+            <purpose>Data-driven insights and user understanding</purpose>
+            <subagentCount>9</subagentCount>
+            <keyOutputs>
+                <item>Research Reports</item>
+                <item>User Personas</item>
+                <item>Competitive Analysis</item>
+                <item>Trend Reports</item>
+            </keyOutputs>
+            <subagents>
+                <item>Market Research Analyst</item>
+                <item>User Research Specialist</item>
+                <item>Data Analyst</item>
+                <item>Survey Specialist</item>
+                <item>Qualitative Expert</item>
+                <item>Competitive Analyst</item>
+                <item>Report Writer</item>
+                <item>Task Coordinator</item>
+                <item>Recurring Tasks Coordinator</item>
+            </subagents>
+        </agent>
+        <agent>
+            <name>Project Manager Agent</name>
+            <purpose>Execution coordination and delivery management</purpose>
+            <subagentCount>4</subagentCount>
+            <keyOutputs>
+                <item>Project Plans</item>
+                <item>Sprint Backlogs</item>
+                <item>Risk Registers</item>
+                <item>Status Reports</item>
+            </keyOutputs>
+            <subagents>
+                <item>Project Planner</item>
+                <item>Task Manager</item>
+                <item>Project Analyst</item>
+                <item>Status Writer</item>
+            </subagents>
+        </agent>
+        <agent>
+            <name>Content Strategist Agent</name>
+            <purpose>Content creation and messaging alignment</purpose>
+            <subagentCount>10</subagentCount>
+            <keyOutputs>
+                <item>Content Calendars</item>
+                <item>Style Guides</item>
+                <item>SEO Content</item>
+                <item>Performance Reports</item>
+            </keyOutputs>
+            <subagents>
+                <item>Content Writer</item>
+                <item>SEO Specialist</item>
+                <item>Content Analyst</item>
+                <item>Editorial Manager</item>
+                <item>Operations Specialist</item>
+                <item>Social Media Strategist</item>
+                <item>Email Marketing Specialist</item>
+                <item>Localization Expert</item>
+                <item>Task Coordinator</item>
+                <item>Recurring Tasks Coordinator</item>
+            </subagents>
+        </agent>
+        <agent>
+            <name>Public Relations Agent</name>
+            <purpose>External communication and reputation management</purpose>
+            <subagentCount>10</subagentCount>
+            <keyOutputs>
+                <item>Press Releases</item>
+                <item>Crisis Protocols</item>
+                <item>Media Coverage</item>
+                <item>Event Plans</item>
+            </keyOutputs>
+            <subagents>
+                <item>Media Relations</item>
+                <item>Crisis Manager</item>
+                <item>Reputation Analyst</item>
+                <item>Press Writer</item>
+                <item>Event Coordinator</item>
+                <item>Internal Comms</item>
+                <item>Influencer Relations</item>
+                <item>Analytics Specialist</item>
+                <item>Task Coordinator</item>
+                <item>Recurring Tasks Coordinator</item>
+            </subagents>
+        </agent>
+        <agent>
+            <name>Cloud Infrastructure Agent</name>
+            <purpose>Cloud service management and deployment</purpose>
+            <subagentCount>13</subagentCount>
+            <keyOutputs>
+                <item>Infrastructure Templates</item>
+                <item>CI/CD Pipelines</item>
+                <item>Cost Reports</item>
+                <item>Security Audits</item>
+            </keyOutputs>
+            <subagents>
+                <item>LLM Service Manager</item>
+                <item>CI/CD Specialist</item>
+                <item>Build Engineer</item>
+                <item>Test Engineer</item>
+                <item>Deployment Manager</item>
+                <item>Cost Analyst</item>
+                <item>System Architect</item>
+                <item>DevTools Manager</item>
+                <item>IDE Specialist</item>
+                <item>Integrations Expert</item>
+                <item>Task Coordinator</item>
+                <item>Recurring Tasks Coordinator</item>
+                <item>Deployment Manager</item>
+            </subagents>
+        </agent>
+        <agent>
+            <name>Google Apps Script Agent</name>
+            <purpose>Workspace automation and integration</purpose>
+            <subagentCount>10</subagentCount>
+            <keyOutputs>
+                <item>Automated Workflows</item>
+                <item>Custom Functions</item>
+                <item>Data Pipelines</item>
+                <item>Integration Connectors</item>
+            </keyOutputs>
+            <subagents>
+                <item>Script Developer</item>
+                <item>Script Tester</item>
+                <item>Script Deployer</item>
+                <item>Script Integrator</item>
+                <item>Cost Analyzer</item>
+                <item>Script Architect</item>
+                <item>DevTools Manager</item>
+                <item>IDE Handler</item>
+                <item>Task Coordinator</item>
+                <item>Recurring Tasks Coordinator</item>
+            </subagents>
+        </agent>
+        <agent>
+            <name>Business Review Agent</name>
+            <purpose>Performance monitoring and strategic alignment</purpose>
+            <subagentCount>4</subagentCount>
+            <keyOutputs>
+                <item>Executive Dashboards</item>
+                <item>Business Reviews</item>
+                <item>Performance Analysis</item>
+                <item>ROI Calculations</item>
+            </keyOutputs>
+            <subagents>
+                <item>Metrics Analysts</item>
+                <item>Dashboard Designers</item>
+                <item>Business Analysts</item>
+                <item>Report Writers</item>
+            </subagents>
+        </agent>
+    </primaryAgents>
+    <workflow>
+        <phase>
+            <name>Discovery &amp; Planning</name>
+            <duration>2 weeks</duration>
+            <activities>
+                <item>Context Gathering</item>
+                <item>Research Activation</item>
+                <item>Strategy Formation</item>
+            </activities>
+            <outputs>
+                <item>Problem Statement</item>
+                <item>Research Findings</item>
+                <item>Product Brief</item>
+                <item>Success Metrics</item>
+            </outputs>
+            <decisionGates>
+                <item>Problem-Solution Fit</item>
+                <item>Resource Check</item>
+                <item>Strategic Alignment</item>
+            </decisionGates>
+        </phase>
+        <phase>
+            <name>Design &amp; Architecture</name>
+            <duration>2 weeks</duration>
+            <activities>
+                <item>UX Design Sprint</item>
+                <item>Technical Architecture</item>
+                <item>Content Strategy</item>
+            </activities>
+            <outputs>
+                <item>Design Mockups</item>
+                <item>Architecture Document</item>
+                <item>API Specs</item>
+                <item>Content Plan</item>
+            </outputs>
+            <decisionGates>
+                <item>Design Review</item>
+                <item>Architecture Review</item>
+                <item>Feasibility Assessment</item>
+            </decisionGates>
+        </phase>
+        <phase>
+            <name>Development &amp; Testing</name>
+            <duration>4 weeks</duration>
+            <activities>
+                <item>Sprint Execution</item>
+                <item>Quality Assurance</item>
+                <item>Documentation</item>
+            </activities>
+            <outputs>
+                <item>Production Code</item>
+                <item>Test Reports</item>
+                <item>Documentation</item>
+                <item>Deployment Packages</item>
+            </outputs>
+            <decisionGates>
+                <item>Code Quality</item>
+                <item>Test Coverage</item>
+                <item>Security Scan</item>
+                <item>Performance</item>
+            </decisionGates>
+        </phase>
+        <phase>
+            <name>Launch &amp; Optimization</name>
+            <duration>2 weeks</duration>
+            <activities>
+                <item>Deployment</item>
+                <item>Launch Activities</item>
+                <item>Optimization</item>
+            </activities>
+            <outputs>
+                <item>Live Product</item>
+                <item>Launch Communications</item>
+                <item>Monitoring Dashboards</item>
+                <item>Metrics Reports</item>
+            </outputs>
+            <decisionGates>
+                <item>Go/No-Go</item>
+                <item>Rollback Criteria</item>
+                <item>Success Validation</item>
+            </decisionGates>
+        </phase>
+        <phase>
+            <name>Iteration &amp; Scaling</name>
+            <duration>Ongoing</duration>
+            <activities>
+                <item>Metrics Analysis</item>
+                <item>Feedback Integration</item>
+                <item>Scaling Planning</item>
+            </activities>
+            <outputs>
+                <item>Improvement Backlog</item>
+                <item>Scaling Roadmap</item>
+                <item>Optimization Reports</item>
+            </outputs>
+            <decisionGates>
+                <item>Enhancement Approval</item>
+                <item>Scaling Investment</item>
+                <item>Tech Debt Priority</item>
+            </decisionGates>
+        </phase>
+    </workflow>
+    <toolHierarchy>
+        <low>
+            <item>file_operations</item>
+            <item>shell_operations</item>
+            <item>basic_search</item>
+        </low>
+        <medium>
+            <item>code_operations</item>
+            <item>search_operations</item>
+            <item>data_operations</item>
+        </medium>
+        <high>
+            <item>agent_operations</item>
+            <item>task_operations</item>
+            <item>integration_operations</item>
+            <item>llm_operations</item>
+        </high>
+    </toolHierarchy>
+    <successMetrics>
+        <delivery>
+            <onTimeRate>Greater than 90%</onTimeRate>
+            <velocityStability>±10%</velocityStability>
+        </delivery>
+        <quality>
+            <codeScore>Greater than 85%</codeScore>
+            <testCoverage>Greater than 80%</testCoverage>
+            <bugEscapeRate>Less than 5%</bugEscapeRate>
+        </quality>
+        <user>
+            <featureAdoption>Greater than 60%</featureAdoption>
+            <nps>Greater than 40</nps>
+            <timeToValue>Less than 7 days</timeToValue>
+        </user>
+        <team>
+            <collaborationIndex>Greater than 8/10</collaborationIndex>
+            <knowledgeSharing>Greater than 75%</knowledgeSharing>
+        </team>
+        <business>
+            <roi>Greater than 3x</roi>
+            <timeToMarket>Greater than 30% improvement</timeToMarket>
+        </business>
+    </successMetrics>
+    <operationalInstructions>
+        <outputFormats>
+            <item>Markdown for documentation</item>
+            <item>Mermaid.js for diagrams</item>
+            <item>JSON for data exchange</item>
+            <item>YAML for configuration</item>
+        </outputFormats>
+        <namingConventions>
+            <branches>feature/JIRA-123-description</branches>
+            <commits>type(scope): message</commits>
+            <files>lowercase-hyphenated</files>
+        </namingConventions>
+        <qualityStandards>
+            <codeCoverage>80%</codeCoverage>
+            <responseTime>Less than 1s</responseTime>
+            <accessibility>WCAG 2.1 AA</accessibility>
+            <security>OWASP Top 10</security>
+        </qualityStandards>
+        <communicationProtocols>
+            <async>Slack</async>
+            <sync>Zoom</sync>
+            <documentation>Markdown in repo</documentation>
+            <escalation>2-hour SLA for blockers</escalation>
+        </communicationProtocols>
+    </operationalInstructions>
+</agent>

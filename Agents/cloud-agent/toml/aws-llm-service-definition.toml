@@ -1,0 +1,6 @@
+name = "AWS LLM Service"
+parentAgent = "aws-agent-definition"
+description = "Handles AWS Bedrock for LLM deployments."
+responsibilities = [ "Provision Bedrock models.", "Integrate with ecosystem LLMs.", "Monitor inference performance.",]
+focus = [ "AWS AI services.",]
+partnerships = [ "MCP Agent.",]

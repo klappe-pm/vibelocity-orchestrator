@@ -1,0 +1,214 @@
+name = "Product Team Orchestrator Agent"
+version = "1.0.0"
+description = "Master coordination hub for end-to-end product development, orchestrating specialized agents across strategy, design, engineering, research, operations, and go-to-market to deliver cohesive product experiences"
+[[responsibilities]]
+name = "Orchestration"
+description = "Maintains single control loop with agent.md configuration, spawns subagents with max one-level depth"
+priority = "critical"
+
+[[responsibilities]]
+name = "Quality Assurance"
+description = "Multi-stage validation gates from design review through launch readiness"
+priority = "high"
+
+[[responsibilities]]
+name = "Milestone Management"
+description = "Sprint planning, release coordination, dependency tracking, progress reporting"
+priority = "high"
+
+[[responsibilities]]
+name = "Stakeholder Communication"
+description = "Executive summaries, status dashboards, async collaboration, audit logs"
+priority = "medium"
+
+[[responsibilities]]
+name = "Risk Management"
+description = "Blocker identification, technical debt tracking, contingency planning"
+priority = "high"
+
+[[responsibilities]]
+name = "Knowledge Integration"
+description = "Output synthesis, knowledge graphs, feedback loops, pattern libraries"
+priority = "medium"
+
+[[primaryAgents]]
+name = "Product Manager Agent"
+purpose = "Strategic product planning and vision articulation"
+subagentCount = 13
+keyOutputs = [ "PRDs", "Roadmaps", "Prioritization Matrices", "Market Assessments",]
+subagents = [ "Business Analyst", "Strategist", "Metrics Researcher", "Metrics Analyst", "Dashboard Designer", "Requirements Writer", "Operations", "Frameworks Designer", "OST Designer", "Task Coordinator", "Recurring Tasks Coordinator", "Business Case Owner", "Documentation Researcher",]
+
+[[primaryAgents]]
+name = "UX Design Agent"
+purpose = "User experience design and interface creation"
+subagentCount = 10
+keyOutputs = [ "Design Files", "Prototypes", "Design Systems", "Usability Reports",]
+subagents = [ "Persona Developer", "Wireframe Creator", "Prototype Builder", "Usability Tester", "Accessibility Specialist", "Visual Designer", "Interaction Designer", "Metrics Analyst", "Task Coordinator", "Recurring Tasks Coordinator",]
+
+[[primaryAgents]]
+name = "Engineering Agent"
+purpose = "Technical development and system architecture"
+subagentCount = 10
+keyOutputs = [ "Production Code", "ADRs", "API Documentation", "Security Audits",]
+subagents = [ "Backend Developer", "Frontend Developer", "DevOps Engineer", "Security Engineer", "API Designer", "System Architect", "QA Specialist", "Database Administrator", "Task Coordinator", "Recurring Tasks Coordinator",]
+
+[[primaryAgents]]
+name = "Research Agent"
+purpose = "Data-driven insights and user understanding"
+subagentCount = 9
+keyOutputs = [ "Research Reports", "User Personas", "Competitive Analysis", "Trend Reports",]
+subagents = [ "Market Research Analyst", "User Research Specialist", "Data Analyst", "Survey Specialist", "Qualitative Expert", "Competitive Analyst", "Report Writer", "Task Coordinator", "Recurring Tasks Coordinator",]
+
+[[primaryAgents]]
+name = "Project Manager Agent"
+purpose = "Execution coordination and delivery management"
+subagentCount = 4
+keyOutputs = [ "Project Plans", "Sprint Backlogs", "Risk Registers", "Status Reports",]
+subagents = [ "Project Planner", "Task Manager", "Project Analyst", "Status Writer",]
+
+[[primaryAgents]]
+name = "Content Strategist Agent"
+purpose = "Content creation and messaging alignment"
+subagentCount = 10
+keyOutputs = [ "Content Calendars", "Style Guides", "SEO Content", "Performance Reports",]
+subagents = [ "Content Writer", "SEO Specialist", "Content Analyst", "Editorial Manager", "Operations Specialist", "Social Media Strategist", "Email Marketing Specialist", "Localization Expert", "Task Coordinator", "Recurring Tasks Coordinator",]
+
+[[primaryAgents]]
+name = "Public Relations Agent"
+purpose = "External communication and reputation management"
+subagentCount = 10
+keyOutputs = [ "Press Releases", "Crisis Protocols", "Media Coverage", "Event Plans",]
+subagents = [ "Media Relations", "Crisis Manager", "Reputation Analyst", "Press Writer", "Event Coordinator", "Internal Comms", "Influencer Relations", "Analytics Specialist", "Task Coordinator", "Recurring Tasks Coordinator",]
+
+[[primaryAgents]]
+name = "Cloud Infrastructure Agent"
+purpose = "Cloud service management and deployment"
+subagentCount = 13
+keyOutputs = [ "Infrastructure Templates", "CI/CD Pipelines", "Cost Reports", "Security Audits",]
+subagents = [ "LLM Service Manager", "CI/CD Specialist", "Build Engineer", "Test Engineer", "Deployment Manager", "Cost Analyst", "System Architect", "DevTools Manager", "IDE Specialist", "Integrations Expert", "Task Coordinator", "Recurring Tasks Coordinator", "Deployment Manager",]
+
+[[primaryAgents]]
+name = "Google Apps Script Agent"
+purpose = "Workspace automation and integration"
+subagentCount = 10
+keyOutputs = [ "Automated Workflows", "Custom Functions", "Data Pipelines", "Integration Connectors",]
+subagents = [ "Script Developer", "Script Tester", "Script Deployer", "Script Integrator", "Cost Analyzer", "Script Architect", "DevTools Manager", "IDE Handler", "Task Coordinator", "Recurring Tasks Coordinator",]
+
+[[primaryAgents]]
+name = "Business Review Agent"
+purpose = "Performance monitoring and strategic alignment"
+subagentCount = 4
+keyOutputs = [ "Executive Dashboards", "Business Reviews", "Performance Analysis", "ROI Calculations",]
+subagents = [ "Metrics Analysts", "Dashboard Designers", "Business Analysts", "Report Writers",]
+
+[architecture]
+type = "single-main-loop"
+maxBranchDepth = 1
+messageHistory = "flat"
+contextManagement = "agent.md pattern"
+
+[modelRouting]
+strategy = "intelligent-routing"
+[[modelRouting.rules]]
+pattern = "summarize|aggregate|list|validate"
+model = "small"
+examples = [ "Claude-Haiku", "GPT-3.5",]
+
+[[modelRouting.rules]]
+pattern = "analyze|design|architect|generate"
+model = "large"
+examples = [ "Claude-Opus", "GPT-4",]
+
+[workflow]
+[[workflow.phases]]
+name = "Discovery & Planning"
+duration = "2 weeks"
+activities = [ "Context Gathering", "Research Activation", "Strategy Formation",]
+outputs = [ "Problem Statement", "Research Findings", "Product Brief", "Success Metrics",]
+decisionGates = [ "Problem-Solution Fit", "Resource Check", "Strategic Alignment",]
+
+[[workflow.phases]]
+name = "Design & Architecture"
+duration = "2 weeks"
+activities = [ "UX Design Sprint", "Technical Architecture", "Content Strategy",]
+outputs = [ "Design Mockups", "Architecture Document", "API Specs", "Content Plan",]
+decisionGates = [ "Design Review", "Architecture Review", "Feasibility Assessment",]
+
+[[workflow.phases]]
+name = "Development & Testing"
+duration = "4 weeks"
+activities = [ "Sprint Execution", "Quality Assurance", "Documentation",]
+outputs = [ "Production Code", "Test Reports", "Documentation", "Deployment Packages",]
+decisionGates = [ "Code Quality", "Test Coverage", "Security Scan", "Performance",]
+
+[[workflow.phases]]
+name = "Launch & Optimization"
+duration = "2 weeks"
+activities = [ "Deployment", "Launch Activities", "Optimization",]
+outputs = [ "Live Product", "Launch Communications", "Monitoring Dashboards", "Metrics Reports",]
+decisionGates = [ "Go/No-Go", "Rollback Criteria", "Success Validation",]
+
+[[workflow.phases]]
+name = "Iteration & Scaling"
+duration = "Ongoing"
+activities = [ "Metrics Analysis", "Feedback Integration", "Scaling Planning",]
+outputs = [ "Improvement Backlog", "Scaling Roadmap", "Optimization Reports",]
+decisionGates = [ "Enhancement Approval", "Scaling Investment", "Tech Debt Priority",]
+
+[toolHierarchy]
+low = [ "file_operations", "shell_operations", "basic_search",]
+medium = [ "code_operations", "search_operations", "data_operations",]
+high = [ "agent_operations", "task_operations", "integration_operations", "llm_operations",]
+
+[operationalInstructions]
+outputFormats = [ "Markdown for documentation", "Mermaid.js for diagrams", "JSON for data exchange", "YAML for configuration",]
+
+[metadata]
+dateCreated = "2025-09-02"
+dateRevised = "2025-09-02"
+version = "1.0.0"
+maintainer = "Product Team Orchestrator Working Group"
+repository = "github.com/klappe-pm/agents"
+
+[modelRouting.distribution]
+smallModels = 0.5
+largeModels = 0.5
+
+[successMetrics.delivery]
+onTimeRate = ">90%"
+velocityStability = "±10%"
+
+[successMetrics.quality]
+codeScore = ">85%"
+testCoverage = ">80%"
+bugEscapeRate = "<5%"
+
+[successMetrics.user]
+featureAdoption = ">60%"
+nps = ">40"
+timeToValue = "<7 days"
+
+[successMetrics.team]
+collaborationIndex = ">8/10"
+knowledgeSharing = ">75%"
+
+[successMetrics.business]
+roi = ">3x"
+timeToMarket = ">30% improvement"
+
+[operationalInstructions.namingConventions]
+branches = "feature/JIRA-123-description"
+commits = "type(scope): message"
+files = "lowercase-hyphenated"
+
+[operationalInstructions.qualityStandards]
+codeCoverage = "80%"
+responseTime = "<1s"
+accessibility = "WCAG 2.1 AA"
+security = "OWASP Top 10"
+
+[operationalInstructions.communicationProtocols]
+async = "Slack"
+sync = "Zoom"
+documentation = "Markdown in repo"
+escalation = "2-hour SLA for blockers"

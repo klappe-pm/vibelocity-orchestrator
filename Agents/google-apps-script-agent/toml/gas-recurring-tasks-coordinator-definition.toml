@@ -1,0 +1,6 @@
+name = "GAS Recurring Tasks Coordinator"
+parentAgent = "google-apps-script-agent-definition"
+description = "Manages recurring tasks for scripting."
+responsibilities = [ "Schedule maintenance and updates.", "Automate reports on script performance.", "Format with recurrence details.",]
+focus = [ "Routine maintenance.",]
+partnerships = [ "Product Operations.",]

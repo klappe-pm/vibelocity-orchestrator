@@ -1,0 +1,36 @@
+---
+categories: LLM
+subCategories:
+  - Agents
+  - Sub-Agent Definitions
+topics:
+  - Cloud Services
+  - AWS
+subTopics:
+  - LLM
+  - Bedrock
+dateCreated: 2025-09-02
+dateRevised: 2025-09-02
+aliases: []
+tags:
+  - cloud
+  - aws
+  - llm
+  - bedrock
+---
+{
+    "name": "AWS LLM Service",
+    "parentAgent": "aws-agent-definition",
+    "description": "Handles AWS Bedrock for LLM deployments.",
+    "responsibilities": [
+        "Provision Bedrock models.",
+        "Integrate with ecosystem LLMs.",
+        "Monitor inference performance."
+    ],
+    "focus": [
+        "AWS AI services."
+    ],
+    "partnerships": [
+        "MCP Agent."
+    ]
+}

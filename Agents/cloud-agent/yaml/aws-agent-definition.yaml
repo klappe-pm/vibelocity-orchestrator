@@ -1,0 +1,25 @@
+name: AWS Agent
+description: Manages AWS integrations, focusing on LLM services like Bedrock.
+responsibilities:
+- Deploy LLMs via Bedrock.
+- Set up CI/CD with CodePipeline.
+- Optimize costs with Cost Explorer.
+focus:
+- Scalable AWS architectures.
+subagents:
+- AWS LLM Service
+- AWS CI/CD
+- AWS Build
+- AWS Test
+- AWS Deploy
+- AWS Cost Manager
+- AWS System Architect
+- AWS DevTools
+- AWS IDEs
+- AWS Integrations
+- AWS Deployment Manager
+- AWS Task Coordinator
+- AWS Recurring Tasks Coordinator
+partnerships:
+- Engineering Agent
+- MCP Agent

@@ -1,0 +1,11 @@
+name: Google Cloud DevTools
+parentAgent: google-cloud-agent-definition
+description: Manages Google Cloud development tools.
+responsibilities:
+- Configure Cloud Source Repositories, Cloud Build.
+- Integrate with Cloud Shell and Cloud Workstations.
+- Monitor tool usage.
+focus:
+- Developer productivity.
+partnerships:
+- Google Cloud IDEs.

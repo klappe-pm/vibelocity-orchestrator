@@ -1,0 +1,250 @@
+# Complete Instructions for Claude Code CLI - Agent System Generation
+
+## Overview
+This is a two-phase project to create a complete agent system for vibelocity-orchestrator:
+1. **Phase 1**: Create the master Agent Specification v2.1 document
+2. **Phase 2**: Generate all agent and sub-agent definition files using the specification
+
+---
+
+# PHASE 1: Create Complete Agent Specification File
+
+## Task
+Create a comprehensive Agent Instructions File Format v2.1 specification document.
+
+## File Location
+`/Users/kevinlappe/Documents/vibelocity-orchestrator/AGENT_SPECIFICATION_v2.1_COMPLETE.md`
+
+## Requirements
+
+### 1. Include ALL Section 0 Content (LLM Instructions)
+- Section 0.1: Purpose of This Document
+- Section 0.2: When to Use This Specification
+- Section 0.3: Agent Creation Workflow (all 8 steps)
+- Section 0.4: Agent vs Sub-Agent Relationship Model
+- Section 0.5: Model Selection Framework (COMPLETE with all decision trees, provider tiers, selection patterns)
+- Section 0.6: Planning Protocol (COMPLETE 6-phase planning process)
+- Section 0.7: Estimation Protocol (COMPLETE cost, time, complexity calculations)
+- Section 0.8: Delegation Protocol (COMPLETE when/how to delegate)
+- Section 0.9: Complete Example - Transforming Model Orchestration Agent
+
+### 2. Include ALL Sections 1-18 (Full YAML Specification)
+- Section 1: Agent Identity & Configuration
+- Section 2: Core Directive  
+- Section 3: Responsibilities (Actionable)
+- Section 4: Scope Contract
+- Section 5: Context Management
+- Section 6: Planning Protocol
+- Section 7: Estimation Protocol
+- Section 8: Model Selection
+- Section 9: Delegation Protocol
+- Section 10: Sub-Agents (If applicable)
+- Section 11: Operational Workflow
+- Section 12: Output Specifications
+- Section 13: Error Handling & Recovery
+- Section 14: Interaction Protocols
+- Section 15: Success Metrics
+- Section 16: Constraints & Guardrails
+- Section 17: Examples & Testing
+- Section 18: Metadata & Versioning
+
+### 3. Model Selection Framework Details (Section 0.5)
+Must include:
+- Complete decision tree (5 steps)
+- All 63 models across 8 providers
+- Provider tier breakdown (Tier 1-4 with all models listed)
+- Selection patterns (single, consensus, hierarchical, adaptive)
+- Task classification (15 categories)
+- Scoring algorithm with weights
+
+### 4-8. Complete Protocol Details
+[Full specifications for Planning, Estimation, Delegation, Example Transformation, and YAML Templates]
+
+### Quality Criteria for Phase 1
+✅ Every section from 0.1 through 0.9 is complete
+✅ Every section from 1 through 18 is a full YAML template
+✅ All 63 models are listed with capabilities
+✅ All examples are concrete and actionable
+✅ File is self-contained and comprehensive
+✅ Total length: approximately 15,000-20,000 lines
+✅ No placeholders or shortcuts - production ready
+
+---
+
+# PHASE 2: Generate All Agent Definition Files
+
+## Context
+Once the AGENT_SPECIFICATION_v2.1_COMPLETE.md is created, use it to generate complete agent definition files for ALL agents in the vibelocity-orchestrator project.
+
+## Existing Agent Structure to Transform
+The project currently has these agent directories in `/Users/kevinlappe/Documents/vibelocity-orchestrator/Agents/`:
+
+### Parent Agents (11 total):
+1. **business-review-agent** (11 sub-agents)
+2. **cloud-agent** (AWS: 14 sub-agents, Azure: 4 sub-agents, Google Cloud: 11 sub-agents)
+3. **content-agent** (11 sub-agents)
+4. **context-agent** (12 sub-agents)
+5. **engineering-agent** (11 sub-agents)
+6. **google-apps-script-agent** (11 sub-agents)
+7. **product-agents** (15 sub-agents including orchestrator)
+8. **project-agent** (5 sub-agents)
+9. **public-relations-agent** (2 sub-agents)
+10. **research-agent** (10 sub-agents)
+11. **ux-agent** (9 sub-agents)
+
+### Total Agent Files to Generate
+- **Parent agents**: 11 main agent files
+- **Sub-agents**: Approximately 100+ sub-agent files
+- **Output directory**: `/Users/kevinlappe/Documents/vibelocity-orchestrator/Agents-v3/`
+
+## Phase 2 Tasks
+
+### Task 2.1: Create Directory Structure
+Create the new v3 directory structure:
+```
+Agents-v3/
+├── business-review-agent/
+│   ├── business-review-agent.yaml
+│   └── subagents/
+│       ├── competitive-intelligence-analyst.subagent.yaml
+│       ├── data-quality-manager.subagent.yaml
+│       ├── financial-analyst.subagent.yaml
+│       └── [8 more sub-agents...]
+├── cloud-agent/
+│   ├── aws-agent.yaml
+│   ├── azure-agent.yaml
+│   ├── google-cloud-agent.yaml
+│   └── subagents/
+│       ├── aws/
+│       │   ├── aws-build.subagent.yaml
+│       │   └── [13 more AWS sub-agents...]
+│       ├── azure/
+│       │   └── [4 Azure sub-agents...]
+│       └── google-cloud/
+│           └── [11 Google Cloud sub-agents...]
+├── content-agent/
+├── context-agent/
+├── engineering-agent/
+├── google-apps-script-agent/
+├── product-agents/
+├── project-agent/
+├── public-relations-agent/
+├── research-agent/
+└── ux-agent/
+```
+
+### Task 2.2: For Each Agent, Generate Complete v2.1 File
+
+For **EACH** of the 100+ agent files:
+
+1. **Read the existing agent file** from `/Agents/[agent-name]/yaml/` or `/Agents/[agent-name]/md/`
+2. **Apply AGENT_SPECIFICATION_v2.1_COMPLETE.md** transformation
+3. **Follow Section 0.3 workflow** (8 steps):
+   - Step 1: Extract requirements from existing file
+   - Step 2: Define scope boundaries
+   - Step 3: Identify sub-agent relationships
+   - Step 4: Define model selection strategy
+   - Step 5: Create planning protocol
+   - Step 6: Define estimation protocol
+   - Step 7: Set up delegation protocol
+   - Step 8: Generate complete specification
+4. **Populate all 18 sections** with agent-specific details
+5. **Include concrete examples** relevant to the specific agent
+6. **Save to Agents-v3** in the new structure
+
+### Task 2.3: Special Handling for Model Orchestration Agent
+
+The **Model Orchestration Agent** is special - it should be generated using Section 0.9 (Complete Example) as a reference, since we have extensive documentation about it.
+
+Source: `/Users/kevinlappe/Documents/vibelocity-orchestrator/[locate the Model Orchestration Agent doc]`
+Output: `/Users/kevinlappe/Documents/vibelocity-orchestrator/Agents-v3/model-orchestration-agent/model-orchestration-agent.yaml`
+
+### Task 2.4: Validation
+
+After generating all files, create a validation report:
+```
+Agents-v3/GENERATION_REPORT.md
+```
+
+Include:
+- Total files generated
+- List of all parent agents (11)
+- List of all sub-agents (~100+)
+- Any warnings or issues encountered
+- Validation checklist:
+  ✅ All 18 sections present in each file
+  ✅ Model selection strategy defined
+  ✅ Planning protocol configured
+  ✅ Estimation protocol configured
+  ✅ Delegation protocol configured (for parent agents)
+  ✅ Sub-agent relationships properly defined
+  ✅ Examples included and relevant
+  ✅ YAML syntax valid
+
+## Phase 2 Execution Strategy
+
+### Option A: Batch Generation (Recommended)
+Process all agents in batches:
+1. Batch 1: business-review-agent (1 parent + 11 subs)
+2. Batch 2: cloud-agent/aws (1 parent + 14 subs)
+3. Batch 3: cloud-agent/azure (1 parent + 4 subs)
+4. Batch 4: cloud-agent/google-cloud (1 parent + 11 subs)
+5. Batch 5-11: Remaining agents
+6. Final: Validation report
+
+### Option B: Incremental (If batch fails)
+Generate one agent at a time, validate, then proceed
+
+## Quality Criteria for Phase 2
+
+✅ All 11 parent agent files generated
+✅ All 100+ sub-agent files generated
+✅ Every file follows AGENT_SPECIFICATION_v2.1_COMPLETE.md exactly
+✅ Every file has all 18 sections populated
+✅ Parent-subagent relationships correctly defined
+✅ Model selection strategies appropriate for each agent's role
+✅ Planning/estimation/delegation protocols configured
+✅ Concrete examples specific to each agent
+✅ Valid YAML syntax in all files
+✅ Generation report created and complete
+
+## Important Notes for Both Phases
+
+### For Phase 1:
+- Do NOT create shortened versions
+- Do NOT use placeholders
+- Do NOT reference external docs
+- DO include every detail from our conversation
+- DO make it production-ready (15,000-20,000 lines)
+
+### For Phase 2:
+- READ each existing agent file to preserve intent
+- ENHANCE with new protocols (planning, estimation, delegation)
+- MAINTAIN original responsibilities and scope
+- APPLY model selection framework intelligently
+- GENERATE concrete, working agent files
+- CREATE proper parent-subagent relationships
+- VALIDATE before moving to next agent
+
+## Success Definition
+
+**Phase 1 Success**: 
+- Single comprehensive specification file exists
+- Can be used to generate any agent file
+- Contains all protocols, examples, and templates
+
+**Phase 2 Success**:
+- All 110+ agent files exist in Agents-v3/
+- Every file is complete and valid
+- Validation report shows 100% success
+- Files are ready for immediate use in production
+
+## Execution Order
+
+1. **First**: Execute Phase 1 - create AGENT_SPECIFICATION_v2.1_COMPLETE.md
+2. **Validate**: Review the specification for completeness
+3. **Then**: Execute Phase 2 - generate all agent files
+4. **Validate**: Review generation report
+5. **Complete**: Confirm all files are ready
+
+This is a comprehensive agent system generation project. Take your time and ensure quality at each step.

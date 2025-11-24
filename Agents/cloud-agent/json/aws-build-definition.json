@@ -1,0 +1,36 @@
+---
+categories: LLM
+subCategories:
+  - Agents
+  - Sub-Agent Definitions
+topics:
+  - Cloud Services
+  - AWS
+subTopics:
+  - Build
+  - CodeBuild
+dateCreated: 2025-09-02
+dateRevised: 2025-09-02
+aliases: []
+tags:
+  - cloud
+  - aws
+  - build
+  - codebuild
+---
+{
+    "name": "AWS Build",
+    "parentAgent": "aws-agent-definition",
+    "description": "Handles build processes using AWS CodeBuild.",
+    "responsibilities": [
+        "Compile code and artifacts.",
+        "Run build scripts.",
+        "Log build metrics."
+    ],
+    "focus": [
+        "Build efficiency."
+    ],
+    "partnerships": [
+        "AWS CI/CD, AWS Test."
+    ]
+}

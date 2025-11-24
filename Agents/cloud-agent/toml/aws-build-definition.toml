@@ -1,0 +1,6 @@
+name = "AWS Build"
+parentAgent = "aws-agent-definition"
+description = "Handles build processes using AWS CodeBuild."
+responsibilities = [ "Compile code and artifacts.", "Run build scripts.", "Log build metrics.",]
+focus = [ "Build efficiency.",]
+partnerships = [ "AWS CI/CD, AWS Test.",]

@@ -1,0 +1,75 @@
+{
+  "completed": [
+    "cloud-agent/aws-build",
+    "cloud-agent/aws-llm-service",
+    "cloud-agent/aws-recurring-tasks-coordinator",
+    "cloud-agent/google-cloud-integrations",
+    "cloud-agent/aws-deployment-manager",
+    "cloud-agent/google-cloud-cost-manager",
+    "cloud-agent/google-cloud-ides",
+    "cloud-agent/aws-system-architect",
+    "cloud-agent/azure-ci-cd",
+    "cloud-agent/aws-ci-cd",
+    "cloud-agent/google-cloud-devtools",
+    "cloud-agent/google-cloud-build",
+    "cloud-agent/google-cloud-ci-cd",
+    "cloud-agent/google-cloud-deploy",
+    "cloud-agent/google-cloud-llm-service",
+    "cloud-agent/aws-integrations",
+    "cloud-agent/google-cloud-deployment-manager",
+    "cloud-agent/aws-task-coordinator",
+    "cloud-agent/google-cloud-system-architect",
+    "cloud-agent/google-cloud-agent",
+    "cloud-agent/azure-llm-service",
+    "cloud-agent/google-cloud-recurring-tasks-coordinator",
+    "cloud-agent/aws-devtools",
+    "cloud-agent/aws-test",
+    "cloud-agent/aws-agent",
+    "cloud-agent/aws-ides",
+    "cloud-agent/azure-build",
+    "cloud-agent/aws-deploy",
+    "cloud-agent/azure-agent",
+    "business-review-agent/business-review-agent-risk-assessment-analyst",
+    "business-review-agent/business-review-agent-process-improvement-specialist",
+    "business-review-agent/business-review-agent-data-quality-manager",
+    "business-review-agent/business-review-agent",
+    "business-review-agent/business-review-agent-recurring-tasks-coordinator",
+    "business-review-agent/business-review-agent-competitive-intelligence-analyst",
+    "business-review-agent/business-review-agent-performance-analyst",
+    "business-review-agent/business-review-agent-okr-tracker",
+    "business-review-agent/business-review-agent-reporting-automation-specialist"
+  ],
+  "failed": [
+    {
+      "agent": "cloud-agent/azure-build",
+      "reason": "Invalid YAML: mapping values are not allowed here\n  in \"<unicode string>\", line 209, column 38:\n     ...    method: Azure DevOps REST API: QueueBuild with exponential ba ... \n                                         ^"
+    },
+    {
+      "agent": "cloud-agent/aws-deploy",
+      "reason": "Invalid YAML: mapping values are not allowed here\n  in \"<unicode string>\", line 214, column 31:\n            method: AWS CodeDeploy: CreateDeployment with exponent ... \n                                  ^"
+    },
+    {
+      "agent": "cloud-agent/aws-cost-manager",
+      "reason": "Invalid YAML: while scanning a double-quoted scalar\n  in \"<unicode string>\", line 101, column 19:\n          validation: \"^\\d{12}$\"\n                      ^\nfound unknown escape character 'd'\n  in \"<unicode string>\", line 101, column 22:\n          validation: \"^\\d{12}$\"\n                         ^"
+    },
+    {
+      "agent": "cloud-agent/azure-agent",
+      "reason": "Invalid YAML: mapping values are not allowed here\n  in \"<unicode string>\", line 270, column 39:\n     ...   method: Azure Resource Manager: Get Deployment Status polling\n                                         ^"
+    },
+    {
+      "agent": "cloud-agent/aws-cost-manager",
+      "reason": "Invalid: while scanning a double-quoted scalar\n  in \"<unicode string>\", line 114, column 19:\n          validation: \"^\\d{12}$\"\n                      ^\nfound unknown escape character 'd'\n  in \"<unicode string>\","
+    },
+    {
+      "agent": "business-review-agent/business-review-agent-financial-analyst",
+      "reason": "Invalid: while scanning a double-quoted scalar\n  in \"<unicode string>\", line 75, column 19:\n          validation: \"^\\d{4}$\"\n                      ^\nfound unknown escape character 'd'\n  in \"<unicode string>\", l"
+    },
+    {
+      "agent": "business-review-agent/business-review-agent-task-coordinator",
+      "reason": "Invalid: while scanning a double-quoted scalar\n  in \"<unicode string>\", line 104, column 19:\n          validation: \"^\\d{4}-\\d{2}-\\d{2}$\"\n                      ^\nfound unknown escape character 'd'\n  in \"<unicod"
+    }
+  ],
+  "skipped": [
+    "cloud-agent/aws-build"
+  ]
+}

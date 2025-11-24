@@ -1,0 +1,36 @@
+---
+categories: LLM
+subCategories:
+  - Agents
+  - Sub-Agent Definitions
+topics:
+  - Cloud Services
+  - Google Cloud
+subTopics:
+  - LLM
+  - Vertex AI
+dateCreated: 2025-09-02
+dateRevised: 2025-09-02
+aliases: []
+tags:
+  - cloud
+  - google cloud
+  - llm
+  - vertex-ai
+---
+{
+    "name": "Google Cloud LLM Service",
+    "parentAgent": "google-cloud-agent-definition",
+    "description": "Handles Google Cloud Vertex AI for LLM deployments.",
+    "responsibilities": [
+        "Provision Vertex AI models.",
+        "Integrate with ecosystem LLMs.",
+        "Monitor inference performance."
+    ],
+    "focus": [
+        "Google Cloud AI services."
+    ],
+    "partnerships": [
+        "MCP Agent."
+    ]
+}

@@ -1,0 +1,6 @@
+name = "Google Cloud IDEs"
+parentAgent = "google-cloud-agent-definition"
+description = "Handles IDE integrations for Google Cloud."
+responsibilities = [ "Configure Cloud Workstations and Cloud Shell.", "Sync codebases.", "Support debugging.",]
+focus = [ "IDE usability.",]
+partnerships = [ "Google Cloud DevTools.",]

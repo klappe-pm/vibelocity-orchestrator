@@ -1,0 +1,6 @@
+name = "Script IDE Handler"
+parentAgent = "google-apps-script-agent-definition"
+description = "Handles IDE setups for Apps Script development."
+responsibilities = [ "Configure local IDEs with Clasp for Apps Script.", "Sync code between local and Google.", "Support code completion and linting.", "Manage project setups.",]
+focus = [ "IDE usability, code syncing.",]
+partnerships = [ "Script DevTools Manager, Engineering Agent.",]

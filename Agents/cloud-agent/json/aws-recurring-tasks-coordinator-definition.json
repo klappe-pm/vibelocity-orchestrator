@@ -1,0 +1,33 @@
+---
+categories: LLM
+subCategories:
+  - Agents
+  - Sub-Agent Definitions
+topics:
+  - Cloud Services
+  - AWS
+subTopics:
+  - Recurring Tasks
+dateCreated: 2025-09-02
+dateRevised: 2025-09-02
+aliases: []
+tags:
+  - cloud
+  - aws
+  - recurring-tasks
+---
+{
+    "name": "AWS Recurring Tasks Coordinator",
+    "parentAgent": "aws-agent-definition",
+    "description": "Manages recurring AWS tasks.",
+    "responsibilities": [
+        "Schedule cost reviews.",
+        "Automate reports."
+    ],
+    "focus": [
+        "Routine efficiency."
+    ],
+    "partnerships": [
+        "Product Operations."
+    ]
+}

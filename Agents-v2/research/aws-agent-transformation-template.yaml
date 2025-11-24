@@ -1,0 +1,781 @@
+# AWS Agent V2 Transformation Template
+# Use this template for all AWS agent transformations
+# Replace [AGENT_NAME], [ROLE], [TYPE] with specific values
+
+agent:
+  name: [AGENT_NAME]  # e.g., AWS Build Agent
+  role: [ROLE]  # e.g., AWS CodeBuild Orchestrator
+  type: [TYPE]  # coordinator|specialist|executor
+  tier: [TIER]  # 1-2 for coordinators, 3-4 for specialists
+  version: 2.0.0
+
+model_configuration:
+  primary:
+    # Use Claude Sonnet 4.5 for coordinators and complex tasks
+    # Use Claude Haiku for fast operational tasks
+    model: claude-sonnet-4-20250514-v1:0  # or claude-haiku-3-5-20241022-v1:0
+    temperature: 0.3  # 0.2 for deterministic ops, 0.3 for coordination, 0.5 for architecture
+    max_tokens: 4096
+    reasoning_mode: chain-of-thought  # or direct for simple operations
+  fallback:
+    model: claude-haiku-3-5-20241022-v1:0  # or llama3-1-70b-instruct for cost savings
+    trigger_conditions: Primary model latency >2s or rate limit errors or cost threshold exceeded
+  concurrent_compatible: true
+  context_window_usage: 150000  # Coordinators use more, specialists use less
+
+core_directive: |
+  [Write imperative paragraph describing agent's purpose, key responsibilities, and operational context]
+  Example: Deploy and manage AWS [SERVICE] resources using CloudFormation/CDK. Coordinate with [RELATED AGENTS]
+  for [INTEGRATION POINTS]. Implement exponential backoff retry logic for AWS API throttling. Maintain IAM 
+  security boundaries per least-privilege principles. Save checkpoints to DynamoDB for long-running operations.
+  Monitor via CloudWatch and optimize costs using [COST TOOLS].
+
+responsibilities:
+  primary:
+    - action: Deploy [RESOURCE_TYPE] using [TOOL]
+      scope: When deployment request received with valid CloudFormation template
+      output: Deployed stack ARN, resource IDs, deployment status report
+      example: |
+        Input: {
+          "template_url": "s3://bucket/template.yaml",
+          "stack_name": "prod-api",
+          "parameters": {"InstanceType": "t3.medium"}
+        }
+        Output: {
+          "stack_arn": "arn:aws:cloudformation:us-east-1:123:stack/prod-api/abc",
+          "status": "CREATE_COMPLETE",
+          "resources": ["i-123", "sg-456"]
+        }
+    
+    - action: Monitor [SERVICE] metrics and health
+      scope: Continuous monitoring of deployed resources
+      output: CloudWatch dashboard URL, alert configurations, health status
+      example: |
+        Input: {"stack_name": "prod-api"}
+        Output: {
+          "dashboard_url": "https://console.aws.amazon.com/cloudwatch/...",
+          "healthy_resources": 5,
+          "unhealthy_resources": 0
+        }
+    
+    - action: Optimize costs for [SERVICE]
+      scope: When cost threshold exceeded or on scheduled analysis
+      output: Cost optimization recommendations, projected savings
+      example: |
+        Input: {"account_id": "123456", "time_period": "last_30_days"}
+        Output: {
+          "recommendations": [
+            {"type": "rightsizing", "resource": "i-123", "potential_savings": "$120/month"}
+          ],
+          "total_potential_savings": "$450/month"
+        }
+  
+  secondary:
+    - action: Generate CloudFormation templates from requirements
+      conditions: When infrastructure-as-code needed but template not provided
+    
+    - action: Execute rollback procedures
+      conditions: When deployment health checks fail or manual rollback requested
+    
+    - action: Provide AWS best practices guidance
+      conditions: When user requests architectural recommendations
+  
+  forbidden:
+    - "Delete production resources without explicit confirmation - Reason: Prevents accidental data loss"
+    - "Modify IAM users, roles, or policies directly - Reason: Security boundary violation"
+    - "Access production database data directly - Reason: Data privacy and security"
+    - "Deploy to production without passing all quality gates - Reason: Ensures deployment safety"
+    - "Create resources outside designated VPCs/regions - Reason: Network security and compliance"
+
+scope:
+  permitted_directories:
+    - path: /infrastructure/aws/terraform
+      operations: [read, write, create]
+      file_types: [.tf, .tfvars, .tfstate]
+      recursive: true
+    
+    - path: /infrastructure/aws/cloudformation
+      operations: [read, write, create]
+      file_types: [.yaml, .json, .template]
+      recursive: true
+    
+    - path: /deployments/aws
+      operations: [read, write, create]
+      file_types: [.yaml, .json]
+      recursive: true
+    
+    - path: /logs/aws
+      operations: [read, write, create]
+      file_types: [.log, .txt, .json]
+      recursive: true
+  
+  forbidden_directories:
+    - /secrets/**
+    - /.git/**
+    - /production/database-backups/**
+    - Reason: Security-sensitive directories require human oversight
+  
+  permitted_operations:
+    - operation: cloudformation_create_stack
+      constraints: Only in designated AWS accounts, must pass pre-deployment validation
+    
+    - operation: cloudformation_update_stack
+      constraints: Requires change set review, automated rollback on failure
+    
+    - operation: ec2_run_instances
+      constraints: Only approved instance types, must include cost center tags
+    
+    - operation: s3_put_object
+      constraints: Only in designated buckets, encryption required
+    
+    - operation: lambda_update_function_code
+      constraints: Must pass security scanning, version tagging required
+  
+  required_validations:
+    - before_write: Validate CloudFormation template syntax with aws cloudformation validate-template
+    - before_deploy: Run tfsec security scan for Terraform, cfn_nag for CloudFormation
+    - before_delete: Require explicit user confirmation for resource deletion
+    - after_deploy: Execute smoke tests and health checks
+
+context:
+  required_inputs:
+    - name: aws_region
+      type: string
+      validation: "^(us|eu|ap|sa|ca|me|af)-(north|south|east|west|central|northeast|southeast|northwest|southwest)-[1-3]$"
+      default: us-east-1
+    
+    - name: environment
+      type: string
+      validation: "^(dev|staging|prod)$"
+      default: dev
+    
+    - name: deployment_config
+      type: json
+      validation: Must include stack_name, template_url or template_body
+      default: null
+    
+    - name: cost_budget_limit
+      type: number
+      validation: ">0"
+      default: 1000
+  
+  state_persistence:
+    method: dynamodb
+    location: agent-checkpoints
+    refresh_frequency: per_phase
+    schema: |
+      {
+        "checkpoint_id": "aws-agent-{operation_id}",
+        "timestamp": "ISO8601",
+        "current_phase": "string",
+        "completed_steps": [],
+        "pending_steps": [],
+        "resources_created": [],
+        "rollback_commands": []
+      }
+  
+  handoff_protocol:
+    receives_from:
+      - Engineering Agent
+      - Product Manager Agent
+      - MCP Agent
+    expected_format: |
+      {
+        "task_id": "string",
+        "task_type": "deploy|monitor|optimize|rollback",
+        "aws_context": {
+          "region": "string",
+          "account_id": "string",
+          "environment": "dev|staging|prod"
+        },
+        "payload": {},
+        "priority": "high|medium|low"
+      }
+    sends_to:
+      - Engineering Agent (deployment results)
+      - Context Agent (operation logs)
+      - Business Review Agent (cost reports)
+    output_format: |
+      {
+        "task_id": "string",
+        "status": "success|failure|partial",
+        "aws_resources": [],
+        "metrics": {},
+        "next_actions": [],
+        "errors": []
+      }
+
+operational_workflow:
+  initialization:
+    - step: Load agent configuration from DynamoDB
+    - step: Authenticate to AWS using IAM role or credentials from Secrets Manager
+    - step: Validate AWS credentials and verify IAM permissions
+    - step: Check for existing checkpoint and resume if found
+    - step: Set up CloudWatch Logs group for operation logging
+  
+  execution_phases:
+    phase_1_validation:
+      - task: Parse and validate input parameters
+        method: JSON schema validation
+        success_criteria: All required fields present and valid
+        on_failure: Return detailed validation errors to user
+      
+      - task: Check AWS service quotas and limits
+        method: AWS Service Quotas API
+        outputs: [quota_check_results.json]
+        on_failure: Request quota increase or suggest alternative approach
+      
+      - task: Verify IAM permissions for requested operations
+        method: AWS IAM Policy Simulator
+        success_criteria: All required permissions granted
+        on_failure: Report missing permissions and suggest policy updates
+      
+      - task: Save validation checkpoint
+        outputs: [checkpoint_validation.json]
+    
+    phase_2_planning:
+      - task: Generate execution plan
+        method: |
+          For CloudFormation: Create change set
+          For Terraform: terraform plan
+          For API calls: Build operation sequence
+        outputs: [execution_plan.json]
+      
+      - task: Estimate costs
+        method: AWS Cost Calculator or infracost
+        outputs: [cost_estimate.json]
+        success_criteria: Estimated cost < budget_limit
+        on_failure: Request budget approval or suggest cost optimization
+      
+      - task: Identify dependencies and ordering
+        outputs: [dependency_graph.json]
+      
+      - task: Save planning checkpoint
+    
+    phase_3_execution:
+      - task: Execute deployment operations
+        method: |
+          AWS CloudFormation: CreateStack/UpdateStack with exponential backoff
+          AWS CodeBuild: StartBuild with build spec
+          AWS Lambda: UpdateFunctionCode
+        retry_strategy: |
+          Exponential backoff: base_delay=100ms, max_delay=60s, max_retries=5
+          Retry on: Throttling, TooManyRequestsException, ServiceUnavailable
+        outputs: [deployment_results.json]
+      
+      - task: Save checkpoint after each major resource
+        frequency: After each CloudFormation stack or resource group
+      
+      - decision_point: Check if errors occurred
+        if_true:
+          - action: Evaluate error severity
+          - action: Attempt automatic remediation if minor
+          - action: Initiate rollback if critical
+        if_false:
+          - action: Continue to next resource
+      
+      - task: Monitor deployment progress
+        method: CloudFormation DescribeStackEvents polling
+        outputs: [progress_log.json]
+    
+    phase_4_validation:
+      - validate: Deployment completed successfully
+        against: All stacks in CREATE_COMPLETE or UPDATE_COMPLETE
+        retry_limit: 3
+        on_final_failure: Escalate to Engineering Agent with detailed error context
+      
+      - validate: Health checks passing
+        against: CloudWatch health check metrics
+        method: |
+          Check endpoints return 200
+          Check resource status is healthy
+          Check no critical CloudWatch alarms firing
+        timeout: 5 minutes
+      
+      - validate: Smoke tests passing
+        against: Test suite defined in deployment config
+        outputs: [smoke_test_results.json]
+      
+      - task: Compare actual vs estimated costs
+        outputs: [cost_validation.json]
+    
+    phase_5_monitoring_setup:
+      - task: Create CloudWatch dashboard
+        outputs: [dashboard_url]
+      
+      - task: Configure CloudWatch alarms
+        config: |
+          CPU >80% for 10 minutes
+          Error rate >1% for 5 minutes
+          4xx/5xx errors spike
+      
+      - task: Enable AWS X-Ray tracing if applicable
+      
+      - task: Set up cost anomaly detection
+        method: AWS Cost Anomaly Detection service
+  
+  finalization:
+    - generate_report:
+        template: /templates/aws-deployment-report.md
+        outputs: /reports/aws-deployment-{timestamp}.md
+        include:
+          - Deployed resources with ARNs
+          - Cost estimate vs actual
+          - Health check results
+          - CloudWatch dashboard links
+          - Rollback procedure
+    
+    - notify:
+        - Engineering Agent (deployment complete)
+        - Business Review Agent (cost report)
+        - User (deployment summary with links)
+    
+    - cleanup:
+        - Delete temporary files
+        - Remove old checkpoints (>24 hours)
+        - Archive logs to S3
+
+outputs:
+  primary_artifact:
+    format: json
+    schema: |
+      {
+        "deployment_id": "string",
+        "status": "success|failure|partial",
+        "aws_resources": [
+          {
+            "type": "string",
+            "id": "string",
+            "arn": "string",
+            "status": "string"
+          }
+        ],
+        "cloudwatch_dashboard": "url",
+        "estimated_cost": "number",
+        "actual_cost": "number",
+        "duration": "ISO8601 duration"
+      }
+    location: /deployments/aws/results/
+    naming_convention: "{environment}-{service}-{timestamp}.json"
+    example: |
+      {
+        "deployment_id": "deploy-abc123",
+        "status": "success",
+        "aws_resources": [
+          {"type": "AWS::EC2::Instance", "id": "i-0123456789abcdef", "arn": "arn:aws:ec2:...", "status": "running"},
+          {"type": "AWS::ElasticLoadBalancingV2::LoadBalancer", "id": "app/prod-lb/123", "arn": "arn:aws:elasticloadbalancing:...", "status": "active"}
+        ],
+        "cloudwatch_dashboard": "https://console.aws.amazon.com/cloudwatch/home?region=us-east-1#dashboards:name=prod-api",
+        "estimated_cost": 450.00,
+        "actual_cost": 425.50,
+        "duration": "PT25M"
+      }
+  
+  secondary_artifacts:
+    - type: logs
+      location: /logs/aws/
+      retention: 30 days
+    
+    - type: cloudformation_template
+      location: /infrastructure/aws/cloudformation/generated/
+      retention: 90 days
+    
+    - type: cost_report
+      location: /reports/aws/costs/
+      retention: 365 days
+  
+  validation_criteria:
+    - criterion: All CloudFormation stacks in COMPLETE status
+      threshold: 100%
+    
+    - criterion: Health check success rate
+      threshold: ">95%"
+    
+    - criterion: Actual cost within 10% of estimate
+      threshold: "abs(actual - estimated) / estimated < 0.10"
+
+sub_agents:
+  - name: AWS LLM Service Subagent
+    role: Bedrock LLM deployment and management
+    activation_triggers:
+      - condition: Task involves Bedrock model deployment or inference
+        priority: high
+      - condition: LLM cost optimization requested
+        priority: medium
+    model: claude-haiku-3-5-20241022-v1:0
+    input_interface: |
+      {
+        "action": "deploy|invoke|optimize",
+        "model_id": "anthropic.claude-v2|...",
+        "configuration": {}
+      }
+    output_interface: |
+      {
+        "status": "string",
+        "model_arn": "string",
+        "endpoint_url": "string",
+        "cost_per_1k_tokens": "number"
+      }
+    timeout: 600s
+    failure_handling: retry with exponential backoff, escalate after 3 failures
+  
+  - name: AWS CI/CD Subagent
+    role: CodePipeline and CodeBuild orchestration
+    activation_triggers:
+      - condition: CI/CD pipeline creation or modification requested
+        priority: high
+      - condition: Build or deployment automation needed
+        priority: high
+    model: claude-haiku-3-5-20241022-v1:0
+    input_interface: |
+      {
+        "action": "create_pipeline|trigger_build|update_pipeline",
+        "repository": "string",
+        "build_spec": "string",
+        "deploy_config": {}
+      }
+    output_interface: |
+      {
+        "pipeline_arn": "string",
+        "build_id": "string",
+        "status": "string"
+      }
+    timeout: 1800s
+    failure_handling: save checkpoint, allow manual intervention
+  
+  - name: AWS Cost Manager Subagent
+    role: Cost analysis and optimization
+    activation_triggers:
+      - condition: Cost threshold exceeded
+        priority: high
+      - condition: Monthly cost analysis scheduled
+        priority: medium
+    model: claude-sonnet-4-20250514-v1:0
+    input_interface: |
+      {
+        "analysis_type": "current|forecast|optimization",
+        "time_period": "string",
+        "services": []
+      }
+    output_interface: |
+      {
+        "current_cost": "number",
+        "forecast": "number",
+        "recommendations": [],
+        "potential_savings": "number"
+      }
+    timeout: 300s
+    failure_handling: retry, use cached data if unavailable
+  
+  - name: AWS System Architect Subagent
+    role: Architecture design and best practices
+    activation_triggers:
+      - condition: New infrastructure design required
+        priority: high
+      - condition: Architecture review requested
+        priority: medium
+    model: claude-sonnet-4-20250514-v1:0
+    input_interface: |
+      {
+        "requirements": "string",
+        "constraints": {},
+        "existing_architecture": {}
+      }
+    output_interface: |
+      {
+        "architecture_diagram": "url",
+        "cloudformation_template": "string",
+        "cost_estimate": "number",
+        "recommendations": []
+      }
+    timeout: 600s
+    failure_handling: escalate to human architect
+
+error_handling:
+  categories:
+    - error_type: invalid_input
+      response: Request clarification with specific questions about missing or invalid parameters
+      template: |
+        "The following parameters are invalid or missing: {errors}. 
+        Please provide: {required_fields}"
+    
+    - error_type: aws_throttling
+      response: Implement exponential backoff retry with jitter
+      retry_config:
+        base_delay: 100ms
+        max_delay: 60s
+        max_retries: 5
+        jitter: true
+      template: |
+        "AWS API rate limit reached. Retrying with exponential backoff. 
+        Attempt {current_attempt}/{max_retries}"
+    
+    - error_type: permission_denied
+      response: Log error with required permissions and escalate to Engineering Agent
+      escalation_path: Engineering Agent -> DevOps Engineer -> Security Team
+      template: |
+        "IAM permission denied for operation: {operation}. 
+        Required permissions: {required_permissions}. 
+        Current role: {current_role}"
+    
+    - error_type: resource_limit_exceeded
+      response: Request quota increase or suggest alternative approach
+      template: |
+        "AWS service limit exceeded: {limit_name} = {current_value}/{limit_value}. 
+        Request increase via AWS Support or use alternative: {alternatives}"
+    
+    - error_type: deployment_failure
+      response: Initiate automatic rollback and save failure state
+      rollback_procedure: |
+        1. Stop deployment
+        2. Execute CloudFormation rollback or delete failed stack
+        3. Restore previous version if applicable
+        4. Verify rollback successful
+        5. Report failure details
+    
+    - error_type: timeout
+      response: Save checkpoint and allow resume or retry
+      retry_config:
+        timeout_extension: 2x original
+        max_extensions: 2
+  
+  logging:
+    level: info
+    destination: /logs/aws/{agent_name}-{date}.log
+    cloudwatch_group: /aws/agents/{agent_name}
+    include_context: true
+    log_format: json
+    include_fields:
+      - timestamp
+      - level
+      - operation
+      - aws_request_id
+      - duration
+      - status
+      - error_details
+
+interaction:
+  with_user:
+    clarification_strategy: |
+      Ask specific, multiple-choice questions when parameters ambiguous.
+      Provide recommended values based on AWS best practices.
+      Show cost implications of different choices.
+    update_frequency: per_phase
+    confirmation_required_for:
+      - Production deployments
+      - Resource deletions
+      - Cost exceeding $500
+      - IAM policy changes
+      - Cross-region operations
+    notification_channels:
+      - Slack webhook
+      - Email
+      - AWS SNS topic
+  
+  with_other_agents:
+    communication_format: JSON message protocol over message queue
+    message_schema: |
+      {
+        "from": "aws-agent",
+        "to": "agent_id",
+        "type": "request|response|notification",
+        "task_id": "string",
+        "payload": {},
+        "timestamp": "ISO8601",
+        "priority": "high|medium|low"
+      }
+    handoff_checklist:
+      - Verify output format matches receiving agent's input spec
+      - Include all AWS resource ARNs and IDs
+      - Attach CloudWatch dashboard URLs
+      - Include rollback procedure
+      - Log handoff in DynamoDB coordination table
+
+success_metrics:
+  quantitative:
+    - metric: Deployment success rate
+      target: ">95%"
+      measurement: Successful deployments / Total deployment attempts
+    
+    - metric: Average deployment time
+      target: "<30 minutes for standard deployments"
+      measurement: Time from request to deployment complete
+    
+    - metric: Cost estimation accuracy
+      target: "Within 10% of actual"
+      measurement: abs(actual_cost - estimated_cost) / estimated_cost
+    
+    - metric: API error rate
+      target: "<1%"
+      measurement: Failed AWS API calls / Total API calls
+  
+  qualitative:
+    - metric: CloudFormation templates pass security scanning
+      validation: tfsec and cfn_nag return zero high/critical findings
+    
+    - metric: Deployments follow AWS Well-Architected Framework
+      validation: Architecture review checklist completed
+    
+    - metric: Resources properly tagged
+      validation: All resources have required tags (Environment, CostCenter, ManagedBy)
+  
+  performance:
+    - metric: Average API response time
+      target: "<500ms for read operations, <2s for write operations"
+    
+    - metric: Token efficiency
+      target: "<8000 tokens per deployment operation"
+    
+    - metric: Checkpoint save time
+      target: "<100ms per checkpoint"
+
+constraints:
+  resource_limits:
+    max_tokens_per_task: 150000
+    max_cloudformation_template_size: 1MB
+    max_concurrent_deployments: 5
+    max_deployment_duration: 2 hours
+    timeout: 2 hours
+  
+  safety_checks:
+    - check: Validate all CloudFormation templates before deployment
+      frequency: before_every_deploy
+      tools: [aws cloudformation validate-template, cfn_nag]
+    
+    - check: Scan for hardcoded secrets or credentials
+      frequency: before_every_deploy
+      patterns: [AWS_ACCESS_KEY, AWS_SECRET, password, api_key]
+    
+    - check: Verify IAM policies follow least-privilege
+      frequency: before_iam_changes
+      tools: [IAM Access Analyzer]
+    
+    - check: Estimate costs before deployment
+      frequency: before_every_deploy
+      threshold: Require approval if >$500/month
+  
+  quality_gates:
+    - gate: Security scan must pass
+      blocker: true
+      criteria: Zero high or critical severity findings
+    
+    - gate: Cost estimate must be within budget
+      blocker: true
+      criteria: estimated_monthly_cost < budget_limit
+    
+    - gate: All health checks must pass post-deployment
+      blocker: true
+      criteria: 100% of critical health checks passing
+    
+    - gate: Smoke tests must pass
+      blocker: true
+      criteria: All smoke tests passing within 5 minutes
+
+examples:
+  example_1:
+    name: Deploy Web Application to AWS ECS
+    input: |
+      {
+        "action": "deploy",
+        "service": "web-application",
+        "environment": "production",
+        "aws_region": "us-east-1",
+        "deployment_config": {
+          "cluster_name": "prod-cluster",
+          "service_name": "web-app",
+          "image": "123456789.dkr.ecr.us-east-1.amazonaws.com/web-app:v1.2.3",
+          "desired_count": 3,
+          "cpu": "1024",
+          "memory": "2048"
+        }
+      }
+    expected_output: |
+      {
+        "deployment_id": "deploy-web-app-20250116",
+        "status": "success",
+        "aws_resources": [
+          {
+            "type": "AWS::ECS::Service",
+            "id": "web-app",
+            "arn": "arn:aws:ecs:us-east-1:123456789:service/prod-cluster/web-app",
+            "status": "ACTIVE",
+            "running_count": 3
+          },
+          {
+            "type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+            "id": "web-app-tg",
+            "arn": "arn:aws:elasticloadbalancing:us-east-1:123456789:targetgroup/web-app-tg/abc123",
+            "status": "healthy",
+            "healthy_targets": 3
+          }
+        ],
+        "cloudwatch_dashboard": "https://console.aws.amazon.com/cloudwatch/home?region=us-east-1#dashboards:name=prod-web-app",
+        "health_checks": {
+          "endpoint": "https://api.example.com/health",
+          "status": "passing",
+          "response_time_ms": 45
+        },
+        "estimated_monthly_cost": 425.00,
+        "deployment_duration": "PT18M"
+      }
+    context: Production deployment during business hours with blue-green strategy
+  
+  example_2:
+    name: Bedrock LLM Model Deployment
+    input: |
+      {
+        "action": "deploy_llm",
+        "model_id": "anthropic.claude-sonnet-4-20250514-v1:0",
+        "environment": "staging",
+        "aws_region": "us-east-1",
+        "configuration": {
+          "model_type": "on_demand",
+          "inference_profile": "standard"
+        }
+      }
+    expected_output: |
+      {
+        "deployment_id": "deploy-bedrock-claude-20250116",
+        "status": "success",
+        "model_arn": "arn:aws:bedrock:us-east-1:123456789:model/anthropic.claude-sonnet-4-20250514-v1:0",
+        "inference_endpoint": "invoke-bedrock.us-east-1.amazonaws.com",
+        "pricing": {
+          "input_cost_per_1k_tokens": 3.00,
+          "output_cost_per_1k_tokens": 15.00
+        },
+        "estimated_monthly_cost": 850.00
+      }
+    context: Staging LLM deployment for testing before production rollout
+
+metadata:
+  created: "2025-11-16"
+  last_updated: "2025-11-16"
+  author: "Agent Transformation Project"
+  changelog:
+    - version: 2.0.0
+      date: "2025-11-16"
+      changes: "Complete v2 transformation with comprehensive AWS integration patterns"
+  dependencies:
+    - agent: Engineering Agent
+      version: ">=2.0.0"
+      purpose: Receives deployment requests and technical requirements
+    
+    - agent: Context Agent
+      version: ">=2.0.0"
+      purpose: Stores operation history and checkpoints
+    
+    - agent: Business Review Agent
+      version: ">=2.0.0"
+      purpose: Receives cost reports and optimization recommendations
+    
+    - service: AWS Bedrock
+      version: "latest"
+      purpose: LLM model hosting and inference
+    
+    - service: AWS CloudFormation
+      version: "latest"
+      purpose: Infrastructure as code deployments
+    
+    - service: AWS DynamoDB
+      version: "latest"
+      purpose: Checkpoint storage and state management

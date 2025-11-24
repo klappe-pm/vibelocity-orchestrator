@@ -1,0 +1,6 @@
+name = "Google Cloud LLM Service"
+parentAgent = "google-cloud-agent-definition"
+description = "Handles Google Cloud Vertex AI for LLM deployments."
+responsibilities = [ "Provision Vertex AI models.", "Integrate with ecosystem LLMs.", "Monitor inference performance.",]
+focus = [ "Google Cloud AI services.",]
+partnerships = [ "MCP Agent.",]

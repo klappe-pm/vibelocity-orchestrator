@@ -1,0 +1,38 @@
+---
+categories: LLM
+subCategories:
+  - Agents
+  - Sub-Agent Definitions
+topics:
+  - Cloud Services
+  - Google Cloud
+subTopics:
+  - IDEs
+  - Cloud Workstations
+  - Cloud Shell
+dateCreated: 2025-09-02
+dateRevised: 2025-09-02
+aliases: []
+tags:
+  - cloud
+  - google cloud
+  - ides
+  - cloud-workstations
+  - cloud-shell
+---
+{
+    "name": "Google Cloud IDEs",
+    "parentAgent": "google-cloud-agent-definition",
+    "description": "Handles IDE integrations for Google Cloud.",
+    "responsibilities": [
+        "Configure Cloud Workstations and Cloud Shell.",
+        "Sync codebases.",
+        "Support debugging."
+    ],
+    "focus": [
+        "IDE usability."
+    ],
+    "partnerships": [
+        "Google Cloud DevTools."
+    ]
+}

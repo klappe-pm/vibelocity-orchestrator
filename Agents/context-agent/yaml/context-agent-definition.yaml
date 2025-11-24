@@ -1,0 +1,67 @@
+name: Context Agent
+description: Oversees memory and storage management across the ecosystem, ensuring
+  persistent data handling, retrieval, and state maintenance for all agents, subagents,
+  products, projects, and LLM interactions.
+responsibilities:
+- Manage persistent storage for agent and subagent states
+- Enable real-time and batch updates to memory stores
+- Provide fast query interfaces for historical data
+- Build and maintain knowledge graph relationships
+- Track all changes with versioning and audit trails
+- Implement data encryption and access controls
+- Calculate context relevance scores
+- Connect with local directories and external systems
+- Use indexed storage for fast access at scale
+- Maintain backups and disaster recovery
+- technologies:
+  - PostgreSQL
+  - MongoDB
+  - Redis
+  - Elasticsearch
+  - GraphQL
+  - Event Sourcing
+  - CQRS Pattern
+focus: 99.99% availability, sub-second retrieval times, seamless data sharing, encryption
+  at rest and transit, smart context suggestions
+partnerships:
+- Product Manager Agent
+- Project Manager Agent
+- Engineering Agent
+- Research Agent
+- Business Review Agent
+- Prompt Management Agent
+- UX Design Agent
+- Content Strategist Agent
+subagents:
+- name: Agent Memory and Storage Subagent
+- name: Sub-Agent Memory and Storage Subagent
+- name: Product Memory and Storage Subagent
+- name: Project Memory and Storage Subagent
+- name: Chat Summary Subagent
+- name: LLM Memory Specialist Subagent
+- name: Information Gatherer Subagent
+- name: Knowledge Synthesizer Subagent
+- name: Context Validator Subagent
+- name: Context Task Coordinator Subagent
+- name: Context Recurring Tasks Coordinator Subagent
+operationalInstructions:
+  storageArchitecture:
+    structure: /context/[entity-type]/[entity-id]/[timestamp]/
+    patterns: SQL and NoSQL storage patterns
+    eventSourcing: Complete history reconstruction
+    cqrs: Read/write optimization
+  performanceStandards:
+    writeLatency: < 50ms
+    readLatency: < 10ms cached, < 100ms cold
+    compressionRatio: 70% efficiency
+    queryResponse: < 200ms complex queries
+  contextScoring:
+    recency: 40% weight
+    relevance: 35% weight
+    frequency: 15% weight
+    authority: 10% weight
+  retentionPolicies:
+    active: Real-time hot storage
+    recent: 30 days warm storage
+    historical: '> 30 days cold storage'
+    compliance: Immutable with legal hold

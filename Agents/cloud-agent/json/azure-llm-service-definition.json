@@ -1,0 +1,36 @@
+---
+categories: LLM
+subCategories:
+  - Agents
+  - Sub-Agent Definitions
+topics:
+  - Cloud Services
+  - Azure
+subTopics:
+  - LLM
+  - Azure OpenAI
+dateCreated: 2025-09-02
+dateRevised: 2025-09-02
+aliases: []
+tags:
+  - cloud
+  - azure
+  - llm
+  - azure-openai
+---
+{
+    "name": "Azure LLM Service",
+    "parentAgent": "azure-agent-definition",
+    "description": "Handles Azure OpenAI Service for LLM deployments.",
+    "responsibilities": [
+        "Provision Azure OpenAI models.",
+        "Integrate with ecosystem LLMs.",
+        "Monitor inference performance."
+    ],
+    "focus": [
+        "Azure AI services."
+    ],
+    "partnerships": [
+        "MCP Agent."
+    ]
+}

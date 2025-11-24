@@ -1,0 +1,36 @@
+---
+categories: LLM
+subCategories:
+  - Agents
+  - Sub-Agent Definitions
+topics:
+  - Cloud Services
+  - AWS
+subTopics:
+  - IDEs
+  - Cloud9
+dateCreated: 2025-09-02
+dateRevised: 2025-09-02
+aliases: []
+tags:
+  - cloud
+  - aws
+  - ides
+  - cloud9
+---
+{
+    "name": "AWS IDEs",
+    "parentAgent": "aws-agent-definition",
+    "description": "Handles IDE integrations for AWS.",
+    "responsibilities": [
+        "Configure Cloud9.",
+        "Sync codebases.",
+        "Support debugging."
+    ],
+    "focus": [
+        "IDE usability."
+    ],
+    "partnerships": [
+        "AWS DevTools."
+    ]
+}

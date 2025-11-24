@@ -1,0 +1,6 @@
+name = "Azure LLM Service"
+parentAgent = "azure-agent-definition"
+description = "Handles Azure OpenAI Service for LLM deployments."
+responsibilities = [ "Provision Azure OpenAI models.", "Integrate with ecosystem LLMs.", "Monitor inference performance.",]
+focus = [ "Azure AI services.",]
+partnerships = [ "MCP Agent.",]
