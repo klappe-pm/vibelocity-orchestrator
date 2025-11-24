@@ -247,51 +247,6 @@ class GoogleAPIClient(BaseAPIClient):
             raw_response=data
         )
 
-class AnthropicAPIClient(BaseAPIClient):
-    """Anthropic Claude API client"""
-    
-    def __init__(self, api_key: Optional[str] = None):
-        api_key = api_key or os.getenv('ANTHROPIC_API_KEY')
-        if not api_key:
-            raise ValueError("ANTHROPIC_API_KEY not found")
-        super().__init__(api_key, "https://api.anthropic.com")
-        
-    async def chat_completion(self,
-                             model: str,
-                             messages: List[Dict[str, str]],
-                             temperature: float = 0.7,
-                             max_tokens: Optional[int] = 4096,
-                             **kwargs) -> APIResponse:
-        """Send chat completion request to Anthropic Claude"""
-        
-        headers = {
-            "x-api-key": self.api_key,
-            "anthropic-version": "2023-06-01",
-            "Content-Type": "application/json"
-        }
-        
-        payload = {
-            "model": model,
-            "messages": messages,
-            "temperature": temperature,
-            "max_tokens": max_tokens or 4096,
-            **kwargs
-        }
-            
-        data, latency_ms = await self._make_request("POST", "v1/messages", headers, payload)
-        
-        return APIResponse(
-            content=data['content'][0]['text'],
-            model=model,
-            provider="anthropic",
-            usage={
-                'input_tokens': data['usage']['input_tokens'],
-                'output_tokens': data['usage']['output_tokens']
-            },
-            latency_ms=latency_ms,
-            raw_response=data
-        )
-
 class AzureOpenAIClient(BaseAPIClient):
     """Azure OpenAI Service API client"""
     
