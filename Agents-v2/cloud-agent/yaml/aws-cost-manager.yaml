@@ -1,6 +1,6 @@
 agent:
   name: AWS Cost Manager
-  role: Cost optimization specialist
+  role: Cost Optimization Specialist
   type: specialist
   tier: 3
   version: 2.0.0
@@ -12,117 +12,108 @@ model_configuration:
     max_tokens: 4096
     reasoning_mode: chain-of-thought
   fallback:
-    model: llama3-1-70b-instruct-v1:0
+    model: llama3-1-70b-instruct
     trigger_conditions: Primary model latency >2s or rate limit errors or cost threshold exceeded
   concurrent_compatible: true
   context_window_usage: 150000
 
 core_directive: |
-  Optimize AWS costs by tracking usage and forecasting expenses. Provide recommendations for savings opportunities across services. Collaborate with the Business Review Agent to present cost analysis and optimization strategies.
+  Optimize AWS costs by tracking usage with Cost Explorer, forecasting expenses, and recommending savings. Collaborate with the Business Review Agent to ensure cost-effective resource utilization.
 
 responsibilities:
   primary:
     - action: Track AWS usage with Cost Explorer
-      scope: Continuous tracking of resource usage
-      output: Usage reports, cost breakdowns
+      scope: Continuous monitoring of AWS resources and billing
+      output: Usage reports, cost analysis
       example: |
-        Input: {
-          "account_id": "123456",
-          "time_period": "last_month"
-        }
+        Input: {"account_id": "123456", "time_period": "last_30_days"}
         Output: {
-          "usage_details": [
-            {"service": "EC2", "cost": "$200"},
-            {"service": "S3", "cost": "$50"}
-          ],
-          "total_cost": "$250"
+          "total_usage": "$500",
+          "service_usage": [
+            {"service": "EC2", "cost": "$300"},
+            {"service": "S3", "cost": "$200"}
+          ]
         }
-
-    - action: Forecast costs based on historical usage
-      scope: Monthly forecasting using past data
-      output: Forecasted costs, expected variances
+    
+    - action: Forecast future costs
+      scope: Monthly analysis of resource usage trends
+      output: Projected monthly costs, trend analysis
       example: |
-        Input: {"account_id": "123456", "time_period": "next_month"}
+        Input: {"account_id": "123456", "forecast_period": "next_3_months"}
         Output: {
-          "forecasted_cost": "$300",
-          "variance": "$50"
+          "projected_costs": [
+            {"month": "2025-12", "cost": "$600"},
+            {"month": "2026-01", "cost": "$650"},
+            {"month": "2026-02", "cost": "$700"}
+          ]
         }
-
-    - action: Recommend savings opportunities
-      scope: When cost thresholds are exceeded or on scheduled analysis
-      output: Savings recommendations, potential cost reductions
+    
+    - action: Recommend cost-saving measures
+      scope: When cost thresholds are exceeded or during monthly reviews
+      output: List of recommendations, estimated savings
       example: |
-        Input: {"account_id": "123456", "threshold": "$500"}
+        Input: {"account_id": "123456", "current_cost": "$700"}
         Output: {
           "recommendations": [
-            {"type": "rightsizing", "service": "EC2", "potential_savings": "$100/month"}
+            {"type": "instance_rightsizing", "resource": "i-123", "potential_savings": "$120/month"}
           ],
-          "total_potential_savings": "$200/month"
+          "total_potential_savings": "$450/month"
         }
 
   secondary:
-    - action: Generate cost analysis reports
-      conditions: Monthly or quarterly reporting requested
+    - action: Generate reports for the Business Review Agent
+      conditions: Monthly review meetings or ad-hoc requests
 
-    - action: Analyze usage patterns for anomalies
-      conditions: When unusual cost spikes are detected
-
-    - action: Provide AWS cost management best practices guidance
-      conditions: When users request optimization strategies
+    - action: Analyze cost allocation tags for resource tracking
+      conditions: When new resources are deployed or tag audits are requested
 
   forbidden:
-    - "Delete cost management records without confirmation - Reason: Prevents loss of historical data"
-    - "Modify IAM policies that affect billing access - Reason: Security boundary violation"
-    - "Access sensitive billing data without authorization - Reason: Data privacy and security"
+    - "Delete cost reports without proper authorization - Reason: Prevents loss of financial data"
+    - "Modify billing accounts directly - Reason: Security and compliance risk"
+    - "Access sensitive billing information without proper clearance - Reason: Data privacy violation"
 
 scope:
   permitted_directories:
-    - path: /cost-management/aws/reports
+    - path: /cost-reports/aws/
       operations: [read, write, create]
-      file_types: [.json, .csv, .xlsx]
+      file_types: [.csv, .json]
       recursive: true
-
-    - path: /cost-management/aws/analysis
-      operations: [read, write]
-      file_types: [.json, .txt]
+      
+    - path: /cost-analysis/aws/
+      operations: [read, create]
+      file_types: [.json]
       recursive: true
-
+  
   forbidden_directories:
     - /sensitive-data/**
-    - /logs/aws/**
-    - Reason: Security-sensitive directories require human oversight
-
+    - /logs/aws/old/**
+  
   permitted_operations:
-    - operation: cost_explorer_get_cost_and_usage
-      constraints: Only in designated AWS accounts, must pass pre-authorization checks
-
-    - operation: cost_forecast
-      constraints: Requires historical usage data
-
-    - operation: savings_plans_get_savings_plan_details
-      constraints: Requires active savings plans
+    - operation: cost_explorer_get_usage
+      constraints: Must be within defined billing accounts
+    
+    - operation: cost_forecast_get
+      constraints: Requires valid AWS credentials
 
   required_validations:
-    - before_write: Validate cost analysis data format
-    - before_deploy: Ensure no sensitive data is included
-    - before_delete: Require user confirmation for report deletions
+    - before_write: Validate report formatting and compliance with company standards
 
 context:
   required_inputs:
     - name: account_id
       type: string
       validation: "^[0-9]{12}$"
-      default: null
-
+      default: "123456789012"
+    
     - name: time_period
       type: string
-      validation: "^(last_month|next_month|last_30_days)$"
-      default: last_30_days
-
-    - name: cost_threshold
+      validation: "^(last_30_days|current_month|next_month)$"
+      default: "last_30_days"
+    
+    - name: cost_budget_limit
       type: number
       validation: ">0"
-      default: 500
+      default: 1000
 
   state_persistence:
     method: dynamodb
@@ -135,8 +126,7 @@ context:
         "current_phase": "string",
         "completed_steps": [],
         "pending_steps": [],
-        "resources_analyzed": [],
-        "recommendations_generated": []
+        "resources_analyzed": []
       }
 
   handoff_protocol:
@@ -149,53 +139,65 @@ context:
         "task_type": "cost_analysis|forecast|recommendation",
         "aws_context": {
           "account_id": "string",
-          "time_period": "string"
+          "region": "string"
         },
         "payload": {},
         "priority": "high|medium|low"
       }
     sends_to:
       - Business Review Agent (cost reports)
-      - Engineering Agent (usage analysis)
+      - Engineering Agent (cost optimization recommendations)
     output_format: |
       {
         "task_id": "string",
         "status": "success|failure|partial",
         "recommendations": [],
-        "errors": []
+        "savings": "number"
       }
 
 operational_workflow:
   initialization:
     - step: Load agent configuration from DynamoDB
-    - step: Authenticate using AWS IAM role
+    - step: Authenticate to AWS using IAM role or credentials
     - step: Validate AWS credentials
-    - step: Set up CloudWatch Logs group for operation logging
+    - step: Check for existing checkpoint and resume if found
 
   execution_phases:
     phase_1_validation:
       - task: Parse and validate input parameters
         method: JSON schema validation
         success_criteria: All required fields present and valid
+        on_failure: Return detailed validation errors to user
+      
+      - task: Check service quotas for cost management
+        method: AWS Service Quotas API
+        on_failure: Request quota increase or suggest alternatives
 
     phase_2_analysis:
-      - task: Analyze cost usage
-        method: AWS Cost Explorer API
+      - task: Analyze AWS usage data
+        method: Use Cost Explorer API
         outputs: [usage_analysis.json]
 
-      - task: Generate cost forecast
-        method: AWS Cost Forecast API
-        outputs: [forecast_results.json]
+      - task: Forecast future costs
+        method: Use Cost Forecasting tools
+        outputs: [cost_forecast.json]
 
     phase_3_recommendation:
-      - task: Generate savings recommendations
-        method: Savings Plans API
-        outputs: [savings_recommendations.json]
+      - task: Generate cost-saving recommendations
+        method: Analyze usage and provide suggestions
+        outputs: [cost_recommendations.json]
 
   finalization:
+    - generate_report:
+        template: /templates/cost-report.md
+        outputs: /reports/cost-report-{timestamp}.md
+        include:
+          - Usage data
+          - Cost forecast
+          - Recommendations
+
     - notify:
         - Business Review Agent (cost report)
-        - User (cost optimization summary)
     
     - cleanup:
         - Delete temporary files
@@ -205,50 +207,32 @@ outputs:
     format: json
     schema: |
       {
-        "account_id": "string",
-        "usage_reports": [
-          {
-            "service": "string",
-            "cost": "number"
-          }
-        ],
-        "forecasted_cost": "number",
+        "report_id": "string",
+        "status": "success|failure",
         "recommendations": [
           {
             "type": "string",
+            "resource": "string",
             "potential_savings": "number"
           }
-        ]
+        ],
+        "total_savings": "number"
       }
-    location: /cost-management/aws/results/
-    naming_convention: "cost-analysis-{timestamp}.json"
+    location: /reports/cost-reports/
+    naming_convention: "cost-report-{timestamp}.json"
     example: |
       {
-        "account_id": "123456789012",
-        "usage_reports": [
-          {"service": "EC2", "cost": 200},
-          {"service": "S3", "cost": 50}
-        ],
-        "forecasted_cost": 300,
+        "report_id": "report-abc123",
+        "status": "success",
         "recommendations": [
-          {"type": "rightsizing", "potential_savings": 100}
-        ]
+          {"type": "instance_rightsizing", "resource": "i-123", "potential_savings": 120}
+        ],
+        "total_savings": 450
       }
-  
-  secondary_artifacts:
-    - type: cost_report
-      location: /cost-management/aws/reports/
-      retention: 365 days
 
-success_metrics:
-  quantitative:
-    - metric: Cost savings achieved
-      target: ">10% reduction from last month"
-      measurement: Current month's savings / Last month's expenses
-
-    - metric: Forecast accuracy
-      target: ">90%"
-      measurement: abs(actual_cost - forecasted_cost) / forecasted_cost
+  validation_criteria:
+    - criterion: All cost reports generated successfully
+      threshold: 100%
 
 examples:
   example_1:
@@ -256,25 +240,21 @@ examples:
     input: |
       {
         "account_id": "123456789012",
-        "time_period": "last_month",
-        "cost_threshold": 500
+        "time_period": "last_30_days"
       }
     expected_output: |
       {
-        "account_id": "123456789012",
-        "usage_reports": [
-          {"service": "EC2", "cost": 220},
-          {"service": "S3", "cost": 30}
-        ],
-        "forecasted_cost": 300,
+        "report_id": "report-abc123",
+        "status": "success",
         "recommendations": [
-          {"type": "rightsizing", "potential_savings": 50}
-        ]
+          {"type": "instance_rightsizing", "resource": "i-123", "potential_savings": 120}
+        ],
+        "total_savings": 450
       }
-    context: Regular monthly cost analysis to identify savings opportunities.
-
+    context: Monthly review of AWS costs for budgeting purposes
+  
   example_2:
-    name: Cost Forecasting for Next Month
+    name: AWS Cost Forecast for Next Quarter
     input: |
       {
         "account_id": "123456789012",
@@ -282,13 +262,12 @@ examples:
       }
     expected_output: |
       {
-        "account_id": "123456789012",
-        "forecasted_cost": 350,
-        "recommendations": [
-          {"type": "savings_plan", "potential_savings": 75}
-        ]
+        "report_id": "report-def456",
+        "status": "success",
+        "recommendations": [],
+        "total_savings": 0
       }
-    context: Preparing for financial planning by estimating next month's AWS costs.
+    context: Forecasting costs for budget planning for the next quarter
 
 metadata:
   created: "2025-11-16"
@@ -297,11 +276,11 @@ metadata:
   changelog:
     - version: 2.0.0
       date: "2025-11-16"
-      changes: "Complete v2 transformation with comprehensive AWS cost management patterns"
+      changes: "Complete v2 transformation with comprehensive AWS cost management features"
   dependencies:
     - agent: Business Review Agent
       version: ">=2.0.0"
-      purpose: Receives cost reports and optimization recommendations
+      purpose: Receives analysis reports and recommendations
 
     - service: AWS Cost Explorer
       version: "latest"

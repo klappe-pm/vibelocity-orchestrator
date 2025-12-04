@@ -37,7 +37,8 @@
     "business-review-agent/business-review-agent-competitive-intelligence-analyst",
     "business-review-agent/business-review-agent-performance-analyst",
     "business-review-agent/business-review-agent-okr-tracker",
-    "business-review-agent/business-review-agent-reporting-automation-specialist"
+    "business-review-agent/business-review-agent-reporting-automation-specialist",
+    "cloud-agent/aws-cost-manager"
   ],
   "failed": [
     {

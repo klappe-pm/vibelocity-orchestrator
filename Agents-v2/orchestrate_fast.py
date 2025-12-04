@@ -19,7 +19,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import logging
 
 # Configuration
-BASE_DIR = Path("/Users/kevinlappe/Documents/vibelocity-orchestrator")
+BASE_DIR = Path(__file__).parent.parent
 V1_AGENTS_DIR = BASE_DIR / "Agents"
 V2_AGENTS_DIR = BASE_DIR / "Agents-v2"
 RESEARCH_DIR = V2_AGENTS_DIR / "research"
